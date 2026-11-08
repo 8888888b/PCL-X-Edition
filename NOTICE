@@ -1,0 +1,118 @@
+PCL Symbio Edition
+Copyright (c) PCL Symbio Edition contributors
+
+本文件用于说明本项目中的第三方来源。除下列内容外，本项目的许可条款见 LICENSE
+（Apache License 2.0）与 Plain Craft Launcher 2/LICENCE（自定义许可证）。
+
+===============================================================================
+一、基岩版功能的参考实现来源
+===============================================================================
+
+本项目的基岩版（UWP / GDK）安装、解密与启动功能，在实现过程中对照移植了
+Round Studio 以下项目的部分代码逻辑：
+
+  * BedrockBoot
+    https://github.com/Round-Studio/BedrockBoot
+    License: GNU General Public License v3.0
+
+  * BedrockLauncher.Core
+    https://github.com/Round-Studio/BedrockLauncher.Core
+    License: GNU General Public License v3.0
+
+涉及的文件与位置（截至本文件新增时）：
+
+  * Plain Craft Launcher 2/Modules/Minecraft/ModBedrockUwp.cs
+      基岩版 UWP 包解析、依赖处理与安装流程
+  * Plain Craft Launcher 2/Modules/Minecraft/ModBedrockGdk.cs
+      XVC（.msixvc）容器解析与解密（对照 BedrockLauncher.Core.GdkDecode）
+  * Plain Craft Launcher 2/Pages/PageBedrock/PageBedrockRight.xaml.cs
+      基岩版页面交互与安装选项处理
+  * Plain Craft Launcher 2/Modules/Minecraft/ModDownload.cs
+      基岩版版本元数据选取逻辑
+
+上述文件中的具体出处已在源码注释中以「移植自」「对应」「参考」等字样逐处标注。
+这些部分的著作权归 Round Studio 及其贡献者所有，按 GPL-3.0 提供，不适用本项目的
+Apache-2.0 / 自定义许可条款。
+
+===============================================================================
+二、内容密钥（CIK）说明
+===============================================================================
+
+本项目不附带、不分发任何 Xbox GDK 内容密钥（CIK）。相关密钥需由使用者在构建时
+通过环境变量自行提供（PCL_BEDROCK_RELEASE_CIK / PCL_BEDROCK_PREVIEW_CIK），
+未提供时构建产物不包含基岩版 GDK 解包能力。
+
+===============================================================================
+三、BLoader（随启动器分发的可选组件）
+===============================================================================
+
+基岩版 GDK 版本的「BLoader」加载器以未修改的 BLoader.dll（v0.2.80）随启动器
+一起分发，仅在用户为某个版本选择 BLoader 时释放到：
+  .minecraft\bedrock\loaders\BLoader\0.2.80\BLoader.dll
+
+  * BLoader
+    https://github.com/Chlna6666/BLoader
+    License: GNU General Public License v3.0
+    完整许可证：Plain Craft Launcher 2/THIRD-PARTY/BLoader/LICENSE
+    （发布产物中位于 THIRD-PARTY/BLoader/LICENSE）
+
+本项目只负责释放、SHA-256 校验并把 BLoader.dll 注入游戏进程，未修改其代码；
+BLoader 的著作权归 Chlna6666 及其贡献者所有，按 GPL-3.0 提供。相关文件：
+
+  * Plain Craft Launcher 2/Modules/Minecraft/ModBedrockBLoader.cs
+      释放、校验与部署 BLoader.dll
+  * Plain Craft Launcher 2/Modules/Minecraft/ModBedrockLoader.cs
+      加载器选项（原版 / LeviLamina / BLoader）
+  * Plain Craft Launcher 2/Resources/BLoader/BLoader.dll
+      随启动器内置的 BLoader 发布文件
+
+===============================================================================
+四、LeviLamina / lip（运行时安装）
+===============================================================================
+
+选择「LeviLamina」加载器时，启动器会按游戏版本通过官方 lip 包管理器安装
+LeviLamina 客户端，不随本项目分发：
+
+  * LeviLamina
+    https://github.com/LiteLDev/LeviLamina
+    License: GNU Lesser General Public License v3.0
+  * lip
+    https://github.com/LiteLDev/lip
+    License: GNU General Public License v3.0
+
+安装过程会下载约 50 MB 依赖，并执行 lip 包自带的 post_install 脚本
+（PeEditor）修改 Minecraft.Windows.exe（生成 .bak 备份）。相关文件：
+
+  * Plain Craft Launcher 2/Modules/Minecraft/ModBedrockLeviLamina.cs
+      按游戏版本解析、下载 lip 并执行安装
+
+===============================================================================
+Third-Party Notices (English Summary)
+===============================================================================
+
+The Bedrock Edition (UWP / GDK) support in this project contains code ported
+from the following GPL-3.0 licensed projects by Round Studio:
+
+  * BedrockBoot             - https://github.com/Round-Studio/BedrockBoot
+  * BedrockLauncher.Core    - https://github.com/Round-Studio/BedrockLauncher.Core
+
+The optional "BLoader" loader is distributed with this launcher as the
+unmodified BLoader.dll (v0.2.80) from https://github.com/Chlna6666/BLoader
+(GPL-3.0). The full license text ships at THIRD-PARTY/BLoader/LICENSE; this
+project only unpacks, verifies (SHA-256) and injects the DLL. Copyright in
+BLoader belongs to Chlna6666 and its contributors and is licensed under
+GPL-3.0, not under this project's Apache-2.0 / custom terms.
+
+When the "LeviLamina" loader is selected, the launcher installs LeviLamina for
+the matching game version through the official lip package manager at runtime.
+Neither LeviLamina (LGPL-3.0) nor lip (GPL-3.0) is redistributed with this
+launcher. The installation downloads about 50 MB and runs the package's
+post_install script (PeEditor), which patches Minecraft.Windows.exe and keeps
+a .bak backup.
+
+Affected files are listed above and marked inline in the source comments.
+Copyright in those portions belongs to Round Studio and its contributors and
+is licensed under GPL-3.0, not under this project's Apache-2.0 / custom terms.
+
+No Xbox GDK Content Integrity Keys (CIK) are bundled or distributed with this
+project. They must be supplied at build time via environment variables.
