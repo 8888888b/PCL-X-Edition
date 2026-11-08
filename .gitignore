@@ -357,3 +357,5 @@ MaskFiles/
 /local-secrets.ps1
 /dist/
 /assets/
+# PCL XE 本地工具链与产物
+/.dotnet/

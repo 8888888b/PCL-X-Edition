@@ -1,0 +1,75 @@
+<local:MyPageRight x:Class="PCL.PageXeAskAiRight"
+                   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                   xmlns:local="clr-namespace:PCL"
+                   PanScroll="{Binding ElementName=PanBack}">
+    <local:MyScrollViewer x:Name="PanBack" VerticalScrollBarVisibility="Auto"
+                          HorizontalScrollBarVisibility="Disabled">
+        <StackPanel Margin="25,10">
+            <local:MyHint x:Name="HintNeedConfig" Margin="0,15" Theme="Yellow"
+                          Text="{DynamicResource Xe.Ai.Error.NotConfigured}" />
+
+            <local:MyCard Margin="0,0,0,15" Title="{DynamicResource Xe.Ai.Right.ConfigTitle}">
+                <StackPanel Margin="21,36,21,15">
+                    <TextBlock Text="{DynamicResource Xe.Ai.Config.BaseUrl}" Margin="0,0,0,4" />
+                    <local:MyTextBox x:Name="TextBaseUrl" Height="30" LostFocus="Config_LostFocus" />
+                    <TextBlock Text="{DynamicResource Xe.Ai.Config.ApiKey}" Margin="0,10,0,4" />
+                    <local:MyTextBox x:Name="TextApiKey" Height="30" LostFocus="Config_LostFocus" />
+                    <TextBlock Text="{DynamicResource Xe.Ai.Config.Model}" Margin="0,10,0,4" />
+                    <local:MyTextBox x:Name="TextModel" Height="30" LostFocus="Config_LostFocus" />
+
+                    <local:MyCheckBox x:Name="CheckAutoExecute" Height="26" Margin="0,10,0,0"
+                                      Text="{DynamicResource Xe.Ai.Config.AutoExecute}" Change="CheckBox_Change" />
+                    <local:MyCheckBox x:Name="CheckConfirm" Height="26"
+                                      Text="{DynamicResource Xe.Ai.Config.ConfirmDanger}" Change="CheckBox_Change" />
+                    <local:MyCheckBox x:Name="CheckContext" Height="26"
+                                      Text="{DynamicResource Xe.Ai.Config.IncludeContext}" Change="CheckBox_Change" />
+
+                    <local:MyHint Theme="Blue" Text="{DynamicResource Xe.Ai.Config.Hint}" Margin="0,8,0,0" />
+                    <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
+                        <local:MyButton x:Name="BtnSaveConfig" Height="32" MinWidth="130" Padding="12,0"
+                                        ColorType="Highlight" Text="{DynamicResource Xe.Ai.Config.Save}"
+                                        Click="BtnSaveConfig_Click" />
+                        <local:MyButton x:Name="BtnTest" Height="32" MinWidth="130" Padding="12,0" Margin="10,0,0,0"
+                                        Text="{DynamicResource Xe.Ai.Config.Test}" Click="BtnTest_Click" />
+                    </StackPanel>
+                </StackPanel>
+            </local:MyCard>
+
+            <local:MyCard Margin="0,0,0,15" Title="{DynamicResource Xe.Ai.Right.ChatTitle}">
+                <StackPanel Margin="21,36,21,15">
+                    <StackPanel x:Name="PanChat" Margin="0,0,0,10" />
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <local:MyTextBox x:Name="TextInput" Grid.Column="0" Height="32"
+                                         HintText="{DynamicResource Xe.Ai.Chat.Placeholder}"
+                                         KeyDown="TextInput_KeyDown" />
+                        <local:MyButton x:Name="BtnSend" Grid.Column="1" Height="32" MinWidth="100" Padding="12,0"
+                                        Margin="8,0,0,0" ColorType="Highlight"
+                                        Text="{DynamicResource Xe.Ai.Chat.Send}" Click="BtnSend_Click" />
+                        <local:MyButton x:Name="BtnClear" Grid.Column="2" Height="32" MinWidth="110" Padding="12,0"
+                                        Margin="8,0,0,0" Text="{DynamicResource Xe.Ai.Chat.Clear}"
+                                        Click="BtnClear_Click" />
+                    </Grid>
+                </StackPanel>
+            </local:MyCard>
+
+            <local:MyCard Margin="0,0,0,15" Title="{DynamicResource Xe.Ai.Chat.ProtocolTitle}">
+                <StackPanel Margin="21,36,21,15">
+                    <TextBlock Text="{DynamicResource Xe.Ai.Chat.ProtocolBody}" TextWrapping="Wrap" />
+                    <local:MyButton x:Name="BtnCopyJson" Height="32" MinWidth="150" Padding="12,0"
+                                    Margin="0,10,0,0" HorizontalAlignment="Left"
+                                    Text="{DynamicResource Xe.Ai.Chat.CopyJson}" Click="BtnCopyJson_Click" />
+                </StackPanel>
+            </local:MyCard>
+
+            <local:MyCard Margin="0,0,0,15" Title="{DynamicResource Xe.Ai.Right.LogTitle}">
+                <StackPanel Margin="21,36,21,15" x:Name="PanLog" />
+            </local:MyCard>
+        </StackPanel>
+    </local:MyScrollViewer>
+</local:MyPageRight>

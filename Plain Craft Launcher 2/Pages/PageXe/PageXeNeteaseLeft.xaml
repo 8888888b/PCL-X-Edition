@@ -1,0 +1,48 @@
+<local:MyPageLeft x:Class="PCL.PageXeNeteaseLeft"
+                  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                  xmlns:local="clr-namespace:PCL"
+                  x:Name="PanBack" Width="300"
+                  AnimatedControl="{Binding ElementName=PanSide, Mode=OneWay}">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition Height="20" />
+        </Grid.RowDefinitions>
+        <local:MyScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto"
+                              HorizontalScrollBarVisibility="Disabled" Margin="20,0,10,0">
+            <StackPanel x:Name="PanSide" Margin="0,12,0,0">
+                <TextBlock Text="{DynamicResource Xe.Netease.Left.Title}" FontSize="20" Margin="0,0,0,6"
+                           Foreground="{DynamicResource ColorBrush3}" />
+                <TextBlock x:Name="LabStatus" Text="{DynamicResource Xe.Netease.Status.NotDetected}"
+                           TextWrapping="Wrap" FontSize="12" Margin="0,0,0,10"
+                           Foreground="{DynamicResource ColorBrushGray5}" />
+
+                <local:MyCard Margin="0,0,0,15" Title="{DynamicResource Xe.Netease.Left.Status}">
+                    <StackPanel Margin="21,36,21,12">
+                        <local:MyListItem x:Name="ItemLauncher" Height="40" IsHitTestVisible="False"
+                                          SvgIcon="lucide/play" />
+                        <local:MyListItem x:Name="ItemSource" Height="40" IsHitTestVisible="False"
+                                          SvgIcon="lucide/info" />
+                        <local:MyListItem x:Name="ItemVersions" Height="40" IsHitTestVisible="False"
+                                          SvgIcon="lucide/folder-open" />
+                    </StackPanel>
+                </local:MyCard>
+
+                <local:MyCard Margin="0,0,0,15" Title="{DynamicResource Xe.Netease.Left.Actions}">
+                    <StackPanel Margin="21,36,21,15">
+                        <local:MyButton x:Name="BtnLaunch" Height="34" Margin="0,0,0,8"
+                                        Text="{DynamicResource Xe.Netease.Btn.Launch}" ColorType="Highlight"
+                                        Click="BtnLaunch_Click" />
+                        <local:MyButton x:Name="BtnRefresh" Height="34" Margin="0,0,0,8"
+                                        Text="{DynamicResource Xe.Netease.Btn.Refresh}" Click="BtnRefresh_Click" />
+                        <local:MyButton x:Name="BtnOpenFolder" Height="34"
+                                        Text="{DynamicResource Xe.Netease.Btn.OpenFolder}" Click="BtnOpenFolder_Click" />
+                    </StackPanel>
+                </local:MyCard>
+
+                <local:MyHint Theme="Blue" Text="{DynamicResource Xe.Mods.Block.Netease}" />
+            </StackPanel>
+        </local:MyScrollViewer>
+    </Grid>
+</local:MyPageLeft>

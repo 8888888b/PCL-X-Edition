@@ -1,16 +1,16 @@
 {
-  "name": "Plain Craft Launcher Symbio Edition",
+  "name": "Plain Craft Launcher XE",
   "version": {
-    "base": "2.17.13",
-    "upstream": "2.12.1",
-    "suffix": "",
-    "code": 538
+    "base": "2.17.14",
+    "upstream": "2.17.14",
+    "suffix": "xe.1",
+    "code": 539
   },
   "licenses": [
     {
       "name": "PCL.Core",
-      "info": "Copyright © PCL Symbio Edition",
-      "website": "https://github.com/Hydrogen-Peroxide/PCL-Symbio-Edition/tree/dev/PCL.Core",
+      "info": "Copyright © PCL Symbio Edition contributors; PCL XE modifications by the PCL XE project.",
+      "website": "https://github.com/Hydrogen-Peroxide/PCL-Symbio-Edition",
       "license": "https://github.com/Hydrogen-Peroxide/PCL-Symbio-Edition/blob/dev/LICENSE"
     },
     {

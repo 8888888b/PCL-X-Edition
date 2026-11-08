@@ -96,6 +96,14 @@ public static class ModMain
     public static PageBedrockLeft? frmBedrockLeft;
     public static PageBedrockRight? frmBedrockRight;
 
+    // PCL XE 扩展页面
+    public static PageXeNeteaseLeft? frmXeNeteaseLeft;
+    public static PageXeNeteaseRight? frmXeNeteaseRight;
+    public static PageXeModManagerLeft? frmXeModManagerLeft;
+    public static PageXeModManagerRight? frmXeModManagerRight;
+    public static PageXeAskAiLeft? frmXeAskAiLeft;
+    public static PageXeAskAiRight? frmXeAskAiRight;
+
     public static MySlider? dragControl = null;
     private static int timer4Count;
     private static int timer150Count;

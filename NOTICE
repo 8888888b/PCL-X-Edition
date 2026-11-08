@@ -116,3 +116,26 @@ is licensed under GPL-3.0, not under this project's Apache-2.0 / custom terms.
 
 No Xbox GDK Content Integrity Keys (CIK) are bundled or distributed with this
 project. They must be supplied at build time via environment variables.
+
+================================================================================
+PCL XE additions
+================================================================================
+
+This distribution is a derivative fork named "PCL XE" based on
+Hydrogen-Peroxide/PCL-Symbio-Edition (Apache-2.0 with GPL-3.0 portions), which
+itself derives from PCL Community Edition / PCL2. All upstream copyright,
+license and attribution notices above remain in full force.
+
+Files added by PCL XE:
+  Plain Craft Launcher 2/Modules/Xe/*.cs
+  Plain Craft Launcher 2/Pages/PageXe/*.xaml, *.xaml.cs
+  Localization keys prefixed "Xe." in PCL.Core/App/Localization/Languages/
+
+PCL XE does not bundle any Minecraft, Minecraft China Edition (NetEase), Mojang
+Studios or NetEase code, assets or credentials. The "China Edition" page only
+starts an officially installed launcher executable chosen by the user.
+
+The "Ask AI" page sends the user's message and a short summary of local
+instance/mod names to the API endpoint configured by the user. No data is sent
+to the PCL XE author. API keys are stored in the launcher's encrypted shared
+configuration on the local machine.

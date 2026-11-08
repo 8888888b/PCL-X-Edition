@@ -4,7 +4,49 @@
 
 <img src="Plain Craft Launcher 2/Images/icon.png" alt="Logo" width="80" height="80">
 
-# PCL Symbio Edition
+# PCL XE
+
+> **PCL XE（Plain Craft Launcher eXtended Edition）** 是基于 [PCL Symbio Edition](https://github.com/Hydrogen-Peroxide/PCL-Symbio-Edition) 的实验性分支，在此基础上新增「网易版启动」「模组管理」「问问 AI」三个顶层分页。下文「上游基线」部分描述的是 PCL SE 的原有能力，XE 完整保留。
+
+## PCL XE 新增功能
+
+| 分页 | 说明 |
+| --- | --- |
+| 网易版 | 扫描注册表卸载项与常见安装目录，找到本机已安装的官方「我的世界中国版」启动器并一键唤起；支持手动指定路径、启动参数与游戏目录。**只做唤起**，不读取账号、不注入进程、不改写中国版游戏文件。 |
+| 模组管理 | 独立顶层分页，列出本地 Java 版客户端实例 mods 目录中的模组，支持启用 / 禁用（沿用 `.disabled` 后缀）、打开目录、跳转下载页，并读取 `fabric.mod.json` / `mcmod.info` / `mods.toml` 显示名称与端类型。 |
+| 问问 AI | 对话式操作启动器：配置任意 OpenAI 兼容 `/chat/completions` 接口后，可对 AI 说「帮我装个模组」，AI 返回 JSON 指令，程序解析后按白名单自动执行。 |
+
+### 服务器 / 客户端不可管理模组
+
+模组管理页左侧可切换「本地客户端实例 / 服务端 / 网易版客户端」三种目标：
+
+- 切到 **服务端**：提示「服务器 / 客户端不可管理模组：服务端模组装在服务端的 mods 目录」，列表清空且所有写操作停用。
+- 切到 **网易版客户端**：提示中国版为封闭客户端、组件由官方启动器管理，同样停用写操作。
+- 实例目录出现 `server.jar`、`server.properties`、`eula.txt` 等服务端标志文件时自动判定为服务端并提示。
+- 单个 jar 中若元数据标记为 `environment: server` / `side="server"` / `serverSideOnly`，会标注「仅服务端 · 客户端不可管理」且不允许启停。
+- 「问问 AI」的系统提示里带有当前目标信息；目标为 server / netease-client 时 AI 会被要求用 `show_hint` 说明原因，而不是尝试安装模组。
+
+### 问问 AI 的 JSON 协议
+
+首次进入页面会提示配置 API（Base URL / API Key / 模型名）。API Key 使用启动器 `ConfigSource.SharedEncrypt` 加密保存，只发送给你填写的地址。
+
+模型必须只输出一个 JSON 对象：
+
+```json
+{
+  "reply": "我来帮你装 JEI",
+  "actions": [
+    { "type": "install_mod", "keyword": "JEI", "mc_version": "1.20.1", "loader": "fabric", "instance": "" },
+    { "type": "open_mods" }
+  ]
+}
+```
+
+`actions` 最多 10 条，白名单为：`install_mod`、`list_mods`、`enable_mod`、`disable_mod`、`open_mods`、`open_download`、`switch_page`、`launch_game`、`launch_netease`、`show_hint`、`set_target_mode`、`refresh_mods`、`no_action`。未知类型一律拒绝；`install_mod` 走 Modrinth 搜索并校验下载文件名，不执行任何模型给出的路径或命令。默认会在执行前显示一次汇总确认，可关闭确认或关闭自动执行。
+
+---
+
+# PCL Symbio Edition（上游基线说明）
 
 [![Stars](https://img.shields.io/github/stars/Hydrogen-Peroxide/PCL-Symbio-Edition?style=for-the-badge&logo=github&label=stars&labelColor=444444&color=eac54f)](https://github.com/Hydrogen-Peroxide/PCL-Symbio-Edition/stargazers)
 ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/Hydrogen-Peroxide/PCL-Symbio-Edition/build-test.yml?style=for-the-badge)
@@ -21,8 +63,8 @@
 
 PCL SE（Plain Craft Launcher Symbio Edition）是由 Hydrogen-Peroxide 维护的第三方 Minecraft 启动器，基于 PCL 开源代码开发，在保留原有交互习惯的基础上补齐了基岩版支持、实例管理与资源下载等能力。
 
-- 当前版本：`2.17.14`
-- 上游基线：PCL `2.12.1`
+- PCL XE 版本：`2.17.14-xe.1`
+- 上游基线：PCL Symbio Edition `2.17.14`（再上游 PCL `2.12.1`）
 - 技术栈：C# / WPF / .NET 10
 
 PCL SE 与 PCL 官方版没有隶属关系，请不要向官方仓库反馈 PCL SE 的问题。
@@ -87,7 +129,9 @@ PCL SE 与 PCL 官方版没有隶属关系，请不要向官方仓库反馈 PCL 
 
 1. 从 [Releases](https://github.com/Hydrogen-Peroxide/PCL-Symbio-Edition/releases) 下载最新版本的发布包
 2. 解压到任意目录（启动器为绿色便携版，不会写入系统目录）
-3. 运行 `Plain Craft Launcher 2.exe`，选择 Java 版或基岩版后即可启动游戏
+3. 运行 `Plain Craft Launcher 2.exe`，选择 Java 版、基岩版、网易版或进入「模组管理」「问问 AI」
+
+> PCL XE 已停用上游自动更新源，避免被上游 PCL SE 的 Release 覆盖。请从本分支的发布页手动获取更新。
 
 官方发布包为框架依赖版本，需要预先安装 [.NET 10 Desktop Runtime](https://get.dot.net/10)；若使用自包含方式自行构建，则无需额外安装运行时。
 

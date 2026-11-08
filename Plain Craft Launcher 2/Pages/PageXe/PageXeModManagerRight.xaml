@@ -1,0 +1,36 @@
+<local:MyPageRight x:Class="PCL.PageXeModManagerRight"
+                   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                   xmlns:local="clr-namespace:PCL"
+                   PanScroll="{Binding ElementName=PanBack}">
+    <local:MyScrollViewer x:Name="PanBack" VerticalScrollBarVisibility="Auto"
+                          HorizontalScrollBarVisibility="Disabled">
+        <StackPanel Margin="25,10">
+            <local:MyHint x:Name="HintBlocked" Margin="0,15" Theme="Red" Visibility="Collapsed" />
+
+            <local:MyCard Margin="0,0,0,15" Title="{DynamicResource Xe.Mods.Right.RuleTitle}">
+                <StackPanel Margin="21,36,21,15">
+                    <TextBlock Text="{DynamicResource Xe.Mods.Right.RuleBody}" TextWrapping="Wrap" />
+                </StackPanel>
+            </local:MyCard>
+
+            <local:MyCard Margin="0,0,0,15" Title="{DynamicResource Xe.Mods.Right.Title}">
+                <StackPanel Margin="21,36,21,15">
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                        <local:MyButton x:Name="BtnRefresh" Height="32" MinWidth="120" Padding="12,0"
+                                        Text="{DynamicResource Xe.Mods.Btn.Refresh}" Click="BtnRefresh_Click" />
+                        <local:MyButton x:Name="BtnOpenFolder" Height="32" MinWidth="150" Padding="12,0" Margin="10,0,0,0"
+                                        Text="{DynamicResource Xe.Mods.Btn.OpenFolder}" Click="BtnOpenFolder_Click" />
+                        <local:MyButton x:Name="BtnGoDownload" Height="32" MinWidth="140" Padding="12,0" Margin="10,0,0,0"
+                                        Text="{DynamicResource Xe.Mods.Btn.GoDownload}" Click="BtnGoDownload_Click" />
+                    </StackPanel>
+                    <TextBlock x:Name="LabSummary" Margin="0,0,0,8"
+                               Foreground="{DynamicResource ColorBrushGray5}" />
+                    <StackPanel x:Name="PanMods" />
+                    <TextBlock x:Name="LabEmpty" Text="{DynamicResource Xe.Mods.Empty}" TextWrapping="Wrap"
+                               Margin="0,8,0,0" Visibility="Collapsed" />
+                </StackPanel>
+            </local:MyCard>
+        </StackPanel>
+    </local:MyScrollViewer>
+</local:MyPageRight>

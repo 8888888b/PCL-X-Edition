@@ -287,9 +287,10 @@ public partial class FormMain
                 {
                     ModDownload.dlClientListMojangLoader.Start(1); // PCL 会同时根据这里的加载结果决定是否使用官方源进行下载
                     RunCountSub();
-                    // SE 版：更新源已换为 PCL-Symbio-Edition 的 GitHub Release，保留自动更新检查
-                    // 启用该加载器会同时加载公告与启动器的更新检查（GitHub 源不返回公告，因此不会出现 CE 公告）
-                    UpdateManager.serverLoader.Start(1);
+                    // PCL XE：不启动上游自动更新加载器。
+                    // 上游更新源指向 PCL-Symbio-Edition 的 Release，自动升级会用上游包覆盖本分支，
+                    // 因此 XE 版本需自行分发；如需启用，请把更新源替换为 XE 自己的发布源。
+                    // UpdateManager.serverLoader.Start(1);
                     ModBase.RunInNewThread(ModMain.TryClearTaskTemp, "TryClearTaskTemp", ThreadPriority.BelowNormal);
                 }
                 catch (Exception ex)
@@ -1387,6 +1388,21 @@ public partial class FormMain
         Bedrock = 13,
 
         /// <summary>
+        ///     PCL XE：网易版（我的世界中国版）启动。
+        /// </summary>
+        Netease = 14,
+
+        /// <summary>
+        ///     PCL XE：模组管理。
+        /// </summary>
+        ModManager = 15,
+
+        /// <summary>
+        ///     PCL XE：问问 AI。
+        /// </summary>
+        AskAi = 16,
+
+        /// <summary>
         ///     联机。
         /// </summary>
         Tools = 3,
@@ -1882,6 +1898,27 @@ public partial class FormMain
                         ModMain.frmBedrockLeft ??= new PageBedrockLeft();
                         ModMain.frmBedrockRight ??= new PageBedrockRight();
                         PageChangeAnim(ModMain.frmBedrockLeft, ModMain.frmBedrockRight);
+                        break;
+                    }
+                case PageType.Netease: // PCL XE：网易版启动
+                    {
+                        ModMain.frmXeNeteaseLeft ??= new PageXeNeteaseLeft();
+                        ModMain.frmXeNeteaseRight ??= new PageXeNeteaseRight();
+                        PageChangeAnim(ModMain.frmXeNeteaseLeft, ModMain.frmXeNeteaseRight);
+                        break;
+                    }
+                case PageType.ModManager: // PCL XE：模组管理
+                    {
+                        ModMain.frmXeModManagerLeft ??= new PageXeModManagerLeft();
+                        ModMain.frmXeModManagerRight ??= new PageXeModManagerRight();
+                        PageChangeAnim(ModMain.frmXeModManagerLeft, ModMain.frmXeModManagerRight);
+                        break;
+                    }
+                case PageType.AskAi: // PCL XE：问问 AI
+                    {
+                        ModMain.frmXeAskAiLeft ??= new PageXeAskAiLeft();
+                        ModMain.frmXeAskAiRight ??= new PageXeAskAiRight();
+                        PageChangeAnim(ModMain.frmXeAskAiLeft, ModMain.frmXeAskAiRight);
                         break;
                     }
                 case PageType.Download: // 下载

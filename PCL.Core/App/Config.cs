@@ -614,4 +614,56 @@ public static partial class Config
         [ConfigItem<string>("VersionServerAuthServer", "")] public partial ArgConfig<string> AuthServerAddress { get; }
         [ConfigItem<bool>("VersionServerLoginLock", false)] public partial ArgConfig<bool> AuthLocked { get; }
     }
+
+    /// <summary>
+    /// PCL XE 扩展配置。所有键均以 Xe 开头，避免与上游配置项冲突。
+    /// </summary>
+    [ConfigGroup("Xe")] partial class XeConfigGroup
+    {
+        /// <summary>「问问 AI」配置。</summary>
+        [ConfigGroup("Ai")] partial class AiConfigGroup
+        {
+            [ConfigItem<string>("XeAiBaseUrl", "https://api.openai.com/v1", ConfigSource.Local)]
+            public partial string BaseUrl { get; set; }
+
+            [ConfigItem<string>("XeAiApiKey", "", ConfigSource.SharedEncrypt)]
+            public partial string ApiKey { get; set; }
+
+            [ConfigItem<string>("XeAiModel", "gpt-4o-mini", ConfigSource.Local)]
+            public partial string Model { get; set; }
+
+            [ConfigItem<bool>("XeAiAutoExecute", true, ConfigSource.Local)]
+            public partial bool AutoExecute { get; set; }
+
+            [ConfigItem<bool>("XeAiConfirmDanger", true, ConfigSource.Local)]
+            public partial bool ConfirmDanger { get; set; }
+
+            [ConfigItem<bool>("XeAiIncludeContext", true, ConfigSource.Local)]
+            public partial bool IncludeContext { get; set; }
+        }
+
+        /// <summary>网易版启动配置。</summary>
+        [ConfigGroup("Netease")] partial class NeteaseConfigGroup
+        {
+            [ConfigItem<string>("XeNeteaseLauncherPath", "", ConfigSource.Local)]
+            public partial string LauncherPath { get; set; }
+
+            [ConfigItem<string>("XeNeteaseLaunchArgs", "", ConfigSource.Local)]
+            public partial string LaunchArgs { get; set; }
+
+            [ConfigItem<string>("XeNeteaseGameDir", "", ConfigSource.Local)]
+            public partial string GameDir { get; set; }
+        }
+
+        /// <summary>模组管理配置。</summary>
+        [ConfigGroup("Mods")] partial class ModsConfigGroup
+        {
+            /// <summary>0 = 本地客户端实例，1 = 服务端，2 = 网易版客户端。</summary>
+            [ConfigItem<int>("XeModsTargetMode", 0, ConfigSource.Local)]
+            public partial int TargetMode { get; set; }
+
+            [ConfigItem<string>("XeModsSelectedInstance", "", ConfigSource.Local)]
+            public partial string SelectedInstance { get; set; }
+        }
+    }
 }
