@@ -1857,7 +1857,7 @@
     <sys:String x:Key="Launch.Error.Title">启动失败</sys:String>
     <sys:String x:Key="Launch.Right.CommunityHint.HidePrompt">若要永久隐藏此提示，请输入正确的 PCL XE 开发组织名称。</sys:String>
     <sys:String x:Key="Launch.Right.CommunityHint.InputTitle">输入 PCL XE 开发组织名称</sys:String>
-    <sys:String x:Key="Launch.Right.CommunityHint.Message">PCL XE 是基于 PCL CE 的第三方修改版，由 Hydrogen-Peroxide 独立维护。问题请向 PCL XE 仓库反馈，来源与许可见「设置 → 关于」。</sys:String>
+    <sys:String x:Key="Launch.Right.CommunityHint.Message">PCL XE 是基于 PCL Symbio Edition 的第三方分支，由 PCL XE 项目独立维护，与 PCL2、PCL CE 官方项目均无隶属关系。问题请向本分支反馈，来源与许可见「设置 → 关于」。</sys:String>
     <sys:String x:Key="Launch.Right.CommunityHint.Title">PCL XE 提示</sys:String>
     <sys:String x:Key="Launch.Right.CommunityHint.WrongInput">不太对哦……</sys:String>
     <sys:String x:Key="Launch.Right.Log.Title">启动日志</sys:String>
@@ -3812,7 +3812,7 @@
     <sys:String x:Key="Xe.Netease.Source.Manual">手动指定</sys:String>
     <sys:String x:Key="Xe.Netease.Source.Registry">注册表卸载信息</sys:String>
     <sys:String x:Key="Xe.Netease.Source.CommonPath">常见安装目录</sys:String>
-    <sys:String x:Key="Xe.Netease.Launch.NotFound">未找到网易版的 .minecraft 目录，请在下方手动选择</sys:String>
+    <sys:String x:Key="Xe.Netease.Launch.NotFound">未找到网易版（我的世界中国版）的 .minecraft 目录。PCL XE 只识别带中国版特征的目录，国际版 .minecraft 不会被列出；请在下方手动选择中国版的 .minecraft 文件夹。</sys:String>
     <sys:String x:Key="Xe.Netease.Launch.Success">已通过 .minecraft 启动网易版：{0}</sys:String>
     <sys:String x:Key="Xe.Netease.Launch.Failed">启动失败：{0}</sys:String>
     <sys:String x:Key="Xe.Netease.OpenFolder.NotFound">未找到游戏数据目录，请先手动指定</sys:String>
@@ -3824,7 +3824,7 @@
     <sys:String x:Key="Xe.Netease.Left.Actions">快捷操作</sys:String>
     <sys:String x:Key="Xe.Netease.Right.NoticeTitle">功能说明</sys:String>
     <sys:String x:Key="Xe.Netease.Right.NoticeBody">PCL XE 会直接读取中国版客户端的 .minecraft，并用 Java 版启动管线启动其中的版本，不再唤起官方启动器。账号验证、版本下载与组件安装仍由官方客户端负责；请使用正版账号并遵守网易的用户协议。</sys:String>
-    <sys:String x:Key="Xe.Netease.Right.DetectedTitle">检测到的启动器</sys:String>
+    <sys:String x:Key="Xe.Netease.Right.DetectedTitle">中国版目录</sys:String>
     <sys:String x:Key="Xe.Netease.Right.ConfigTitle">启动配置</sys:String>
     <sys:String x:Key="Xe.Netease.Right.VersionsTitle">可选版本</sys:String>
     <sys:String x:Key="Xe.Netease.Path.Label">启动器路径</sys:String>
@@ -3837,7 +3837,7 @@
     <sys:String x:Key="Xe.Netease.Btn.Refresh">重新检测</sys:String>
     <sys:String x:Key="Xe.Netease.Btn.Launch">启动网易版</sys:String>
     <sys:String x:Key="Xe.Netease.Btn.OpenFolder">打开游戏目录</sys:String>
-    <sys:String x:Key="Xe.Netease.Status.NotDetected">未找到中国版 .minecraft 目录</sys:String>
+    <sys:String x:Key="Xe.Netease.Status.NotDetected">未检测到中国版 .minecraft（已排除国际版目录）</sys:String>
     <sys:String x:Key="Xe.Netease.Status.Detected">已识别 {0}</sys:String>
     <sys:String x:Key="Xe.Netease.Versions.Empty">未在 .minecraft/versions 中找到可启动版本</sys:String>
     <sys:String x:Key="Xe.Netease.Candidate.Source">来源：{0}</sys:String>
@@ -3981,11 +3981,16 @@
     <sys:String x:Key="Xe.Netease.Btn.BrowseDir">浏览</sys:String>
     <sys:String x:Key="Xe.Netease.BrowseDir.Title">选择网易版的 .minecraft 文件夹</sys:String>
     <sys:String x:Key="Xe.Netease.Left.Versions">可启动版本</sys:String>
-    <sys:String x:Key="Xe.Netease.Left.Hint">启动时会直接把该 .minecraft 注册为 PCL 的游戏文件夹；若版本 JSON 不完整或需要网易账号验证，表现可能与官方启动器不同。</sys:String>
+    <sys:String x:Key="Xe.Netease.Left.Hint">只列出带中国版特征的 .minecraft；国际版目录不会被识别。启动时会直接把该 .minecraft 注册为 PCL 的游戏文件夹；若版本 JSON 不完整或需要网易账号验证，表现可能与官方启动器不同。</sys:String>
     <sys:String x:Key="Xe.Netease.Source.NearLauncher">官方启动器附近</sys:String>
     <sys:String x:Key="Xe.Netease.Source.AppData">用户数据目录</sys:String>
     <sys:String x:Key="Xe.Netease.FolderName">我的世界中国版</sys:String>
     <sys:String x:Key="Xe.Netease.Launch.NoVersion">在 {0} 中未找到可启动的版本（versions 下缺少同名 JSON）</sys:String>
     <sys:String x:Key="Xe.Netease.Launch.BadVersion">版本 {0} 无法启动：{1}</sys:String>
     <sys:String x:Key="Xe.Netease.Launch.NotStarted">启动未开始</sys:String>
+    <sys:String x:Key="Xe.Netease.NotChinaEdition">当前填写的目录未检测到中国版特征（如 MCLDownload、netease 文件或版本 JSON 中的 netease 字段），它更像是国际版的 .minecraft。PCL XE 不会把它列为网易版候选，启动前请确认路径是否正确。</sys:String>
+    <sys:String x:Key="Xe.Netease.Status.Unconfirmed">目录未确认是中国版</sys:String>
+    <sys:String x:Key="Setup.Update.Xe.Disabled">PCL XE {0} 不提供自动更新，请从发布页获取新版本。</sys:String>
+    <sys:String x:Key="Xe.Netease.Source.ManualUnconfirmed">手动指定（未确认是中国版）</sys:String>
+    <sys:String x:Key="Xe.Netease.Candidate.Unconfirmed">未确认是中国版</sys:String>
 </ResourceDictionary>

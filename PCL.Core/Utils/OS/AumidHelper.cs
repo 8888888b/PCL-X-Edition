@@ -4,7 +4,7 @@ namespace PCL.Core.Utils.OS;
 
 public static class AumidHelper
 {
-    public const string Aumid = "PCLCommunity.PCLSE";
+    public const string Aumid = "PCLCommunity.PCLXE";
     
     public static bool HasAumid()
     {

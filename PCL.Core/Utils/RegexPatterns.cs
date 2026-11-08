@@ -33,7 +33,7 @@ public static partial class RegexPatterns
     /// </summary>
     public static readonly Regex SemVer = _SemVer();
     private const string PatternSemVer =
-        @"^v?(?<major>0|[1-9]\d*)\.(?<minor>0|[1-9]\d*)\.(?<patch>0|[1-9]\d*)" +
+        @"^v?(?<major>0|[1-9]\d*)\.(?<minor>0|[1-9]\d*)\.(?<patch>\d+)" +
         @"(?:-(?<prerelease>(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?" +
         @"(?:\+(?<build>[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$";
     [GeneratedRegex(PatternSemVer, RegexOptions.ExplicitCapture)]

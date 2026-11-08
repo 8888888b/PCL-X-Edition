@@ -20,7 +20,7 @@ internal static class BedrockInstallTransaction
         var root = Path.GetFullPath(installRoot);
         var destination = BedrockFileSystem.GetChildPath(root, versionId);
         var identity = Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(destination.ToUpperInvariant())));
-        using var mutex = new Mutex(false, "PCLSE.BedrockInstall." + identity[..24]);
+        using var mutex = new Mutex(false, "PCLXE.BedrockInstall." + identity[..24]);
         bool acquired;
         try { acquired = mutex.WaitOne(TimeSpan.FromSeconds(10)); }
         catch (AbandonedMutexException) { acquired = true; }

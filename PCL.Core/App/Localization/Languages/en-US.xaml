@@ -1857,7 +1857,7 @@
     <sys:String x:Key="Launch.Error.Title">Launch failed</sys:String>
     <sys:String x:Key="Launch.Right.CommunityHint.HidePrompt">To permanently hide this notice, enter the correct PCL XE development organization name.</sys:String>
     <sys:String x:Key="Launch.Right.CommunityHint.InputTitle">Enter the PCL XE development organization name</sys:String>
-    <sys:String x:Key="Launch.Right.CommunityHint.Message">PCL XE is a third-party fork of PCL CE, maintained independently by Hydrogen-Peroxide. Report issues to the PCL XE repository; see Settings → About for sources and licenses.</sys:String>
+    <sys:String x:Key="Launch.Right.CommunityHint.Message">PCL XE is a third-party fork of PCL Symbio Edition, maintained independently by the PCL XE project and not affiliated with the official PCL2 or PCL CE projects. Report issues to this fork; see Settings → About for sources and licenses.</sys:String>
     <sys:String x:Key="Launch.Right.CommunityHint.Title">PCL XE notice</sys:String>
     <sys:String x:Key="Launch.Right.CommunityHint.WrongInput">Not quite right...</sys:String>
     <sys:String x:Key="Launch.Right.Log.Title">Launch log</sys:String>
@@ -3812,7 +3812,7 @@
     <sys:String x:Key="Xe.Netease.Source.Manual">Manual</sys:String>
     <sys:String x:Key="Xe.Netease.Source.Registry">Uninstall registry</sys:String>
     <sys:String x:Key="Xe.Netease.Source.CommonPath">Common install path</sys:String>
-    <sys:String x:Key="Xe.Netease.Launch.NotFound">No China Edition .minecraft folder found. Choose one below.</sys:String>
+    <sys:String x:Key="Xe.Netease.Launch.NotFound">No Minecraft China Edition .minecraft folder found. PCL XE only recognises folders that carry China Edition markers and never lists an international .minecraft. Choose the China Edition .minecraft folder below.</sys:String>
     <sys:String x:Key="Xe.Netease.Launch.Success">Launched China Edition via .minecraft: {0}</sys:String>
     <sys:String x:Key="Xe.Netease.Launch.Failed">Launch failed: {0}</sys:String>
     <sys:String x:Key="Xe.Netease.OpenFolder.NotFound">Game data folder not found; set it manually first.</sys:String>
@@ -3824,7 +3824,7 @@
     <sys:String x:Key="Xe.Netease.Left.Actions">Quick actions</sys:String>
     <sys:String x:Key="Xe.Netease.Right.NoticeTitle">How it works</sys:String>
     <sys:String x:Key="Xe.Netease.Right.NoticeBody">PCL XE reads the China Edition .minecraft folder directly and launches its versions through the Java Edition pipeline instead of starting the official launcher. Account verification, version downloads and component installation remain the official client's job; use a legitimate account and follow NetEase's terms.</sys:String>
-    <sys:String x:Key="Xe.Netease.Right.DetectedTitle">Detected launchers</sys:String>
+    <sys:String x:Key="Xe.Netease.Right.DetectedTitle">China Edition folders</sys:String>
     <sys:String x:Key="Xe.Netease.Right.ConfigTitle">Launch settings</sys:String>
     <sys:String x:Key="Xe.Netease.Right.VersionsTitle">Available versions</sys:String>
     <sys:String x:Key="Xe.Netease.Path.Label">Launcher path</sys:String>
@@ -3837,7 +3837,7 @@
     <sys:String x:Key="Xe.Netease.Btn.Refresh">Re-detect</sys:String>
     <sys:String x:Key="Xe.Netease.Btn.Launch">Launch China Edition</sys:String>
     <sys:String x:Key="Xe.Netease.Btn.OpenFolder">Open game folder</sys:String>
-    <sys:String x:Key="Xe.Netease.Status.NotDetected">China Edition .minecraft not found</sys:String>
+    <sys:String x:Key="Xe.Netease.Status.NotDetected">No China Edition .minecraft found (international folders excluded)</sys:String>
     <sys:String x:Key="Xe.Netease.Status.Detected">Detected {0}</sys:String>
     <sys:String x:Key="Xe.Netease.Versions.Empty">No launchable version found under .minecraft/versions</sys:String>
     <sys:String x:Key="Xe.Netease.Candidate.Source">Source: {0}</sys:String>
@@ -3981,11 +3981,16 @@
     <sys:String x:Key="Xe.Netease.Btn.BrowseDir">Browse</sys:String>
     <sys:String x:Key="Xe.Netease.BrowseDir.Title">Select the China Edition .minecraft folder</sys:String>
     <sys:String x:Key="Xe.Netease.Left.Versions">Launchable versions</sys:String>
-    <sys:String x:Key="Xe.Netease.Left.Hint">Launching registers this .minecraft folder as a PCL game folder. If the version JSON is incomplete or NetEase account verification is required, behaviour may differ from the official launcher.</sys:String>
+    <sys:String x:Key="Xe.Netease.Left.Hint">Only .minecraft folders with China Edition markers are listed; international folders are ignored. Launching registers this .minecraft folder as a PCL game folder. If the version JSON is incomplete or NetEase account verification is required, behaviour may differ from the official launcher.</sys:String>
     <sys:String x:Key="Xe.Netease.Source.NearLauncher">Near the official launcher</sys:String>
     <sys:String x:Key="Xe.Netease.Source.AppData">User data folder</sys:String>
     <sys:String x:Key="Xe.Netease.FolderName">Minecraft China Edition</sys:String>
     <sys:String x:Key="Xe.Netease.Launch.NoVersion">No launchable version in {0} (missing matching JSON under versions)</sys:String>
     <sys:String x:Key="Xe.Netease.Launch.BadVersion">Version {0} cannot be launched: {1}</sys:String>
     <sys:String x:Key="Xe.Netease.Launch.NotStarted">launch did not start</sys:String>
+    <sys:String x:Key="Xe.Netease.NotChinaEdition">The folder you entered shows no China Edition markers (such as MCLDownload, netease files or a netease field in the version JSON), so it looks like an international .minecraft. PCL XE will not list it as a China Edition candidate; please double-check the path.</sys:String>
+    <sys:String x:Key="Xe.Netease.Status.Unconfirmed">Folder not confirmed as China Edition</sys:String>
+    <sys:String x:Key="Setup.Update.Xe.Disabled">PCL XE {0} has no built-in updater; get builds from its releases.</sys:String>
+    <sys:String x:Key="Xe.Netease.Source.ManualUnconfirmed">Manual (not confirmed as China Edition)</sys:String>
+    <sys:String x:Key="Xe.Netease.Candidate.Unconfirmed">not confirmed as China Edition</sys:String>
 </ResourceDictionary>

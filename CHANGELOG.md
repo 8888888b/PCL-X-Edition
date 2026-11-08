@@ -2,6 +2,20 @@
 
 > 上游 PCL Symbio Edition 的更新日志（2.14 → 2.17）保留在下方。PCL XE 的改动从本节开始记录。
 
+## 2.14.00
+
+> 从本版本起 PCL XE 使用独立版本号，不再跟随上游 PCL Symbio Edition 的版本序列（上游基线仍为 2.17.14）。
+
+### 🔧 调整
+
+- 重写网易版目录检测：只收录能确认属于「我的世界中国版」的 `.minecraft` —— 路径含 `MCLDownload` / `netease`、目录内存在 netease 特征文件、或版本 JSON 中含 netease 字段；**不再把国际版 `.minecraft` 识别为网易版**
+- 移除 `%APPDATA%\Minecraft`、盘符根 `.minecraft` 等国际版常见路径的自动扫描，新增注册表中中国版启动器安装位置、`MCLDownload\Game\.minecraft` 等中国版专属位置
+- 手动填写的目录若未通过中国版特征校验，右侧显示黄色警告且不会进入候选列表；左栏状态区分为「已识别 / 目录未确认是中国版 / 未检测到」
+- 版本号独立为 `2.14.00`（内部代号 21400），关于页与更新页显示该版本号
+- 更新页停用上游自动更新检查并禁用「再次检查」，避免把上游 Release 误判为新版本后覆盖 XE
+- 启动页社区提示改为「基于 PCL Symbio Edition、由 PCL XE 项目独立维护」，不再声称由上游作者维护
+- 数据目录由 `%APPDATA%\PCLSE` 改为 `%APPDATA%\PCLXE`（旧版的 `.pclse` 一并迁移到 `.pclxe`），首次启动自动迁移并保留已有配置；游戏参数 `launcher_name`、RPC / 单实例管道、通知标识与请求 UA 中的 `PCLSE` 全部改为 `PCLXE`
+
 ## 2.17.14-xe.2
 
 ### 🔧 调整

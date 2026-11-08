@@ -34,7 +34,16 @@ public partial class PageXeNeteaseRight
         LoadConfig();
         RebuildCandidates();
         RebuildVersions();
+        RefreshConfirmHint();
         ModMain.frmXeNeteaseLeft?.Refresh();
+    }
+
+    /// <summary>当前填写的目录不能确认是中国版时给出提示，避免把国际版当网易版启动。</summary>
+    private void RefreshConfirmHint()
+    {
+        var dir = TextMcDir.Text.Trim();
+        var isUnknown = !string.IsNullOrWhiteSpace(dir) && !XeNeteaseService.IsChinaEditionDir(dir);
+        HintNotChina.Visibility = isUnknown ? Visibility.Visible : Visibility.Collapsed;
     }
 
     private void LoadConfig()
@@ -67,10 +76,14 @@ public partial class PageXeNeteaseRight
 
         foreach (var candidate in candidates.Take(5))
         {
+            var info = candidate.Path + "  ·  " + Lang.Text("Xe.Netease.Candidate.Source", candidate.Source);
+            if (!candidate.Confirmed)
+                info += "  ·  " + Lang.Text("Xe.Netease.Candidate.Unconfirmed");
+
             var item = new MyListItem
             {
                 Title = new DirectoryInfo(candidate.Path).Name,
-                Info = candidate.Path + "  ·  " + Lang.Text("Xe.Netease.Candidate.Source", candidate.Source),
+                Info = info,
                 SvgIcon = "lucide/folder-open",
                 Height = 45
             };
@@ -151,5 +164,10 @@ public partial class PageXeNeteaseRight
         Refresh();
     }
 
-    private void Config_LostFocus(object sender, RoutedEventArgs e) => SaveConfig();
+    private void Config_LostFocus(object sender, RoutedEventArgs e)
+    {
+        SaveConfig();
+        RebuildVersions();
+        RefreshConfirmHint();
+    }
 }

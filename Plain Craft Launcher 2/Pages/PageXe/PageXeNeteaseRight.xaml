@@ -9,6 +9,9 @@
             <local:MyHint Margin="0,15" Theme="Blue"
                           Text="{DynamicResource Xe.Netease.Right.NoticeBody}" />
 
+            <local:MyHint x:Name="HintNotChina" Margin="0,0,0,15" Theme="Yellow" Visibility="Collapsed"
+                          Text="{DynamicResource Xe.Netease.NotChinaEdition}" />
+
             <local:MyCard Margin="0,0,0,15" Title="{DynamicResource Xe.Netease.Right.DetectedTitle}">
                 <StackPanel Margin="21,36,21,14">
                     <StackPanel x:Name="PanCandidates" />

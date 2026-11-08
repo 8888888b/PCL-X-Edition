@@ -2973,7 +2973,7 @@ public static class ModLaunch
         gameArguments.Add("${natives_directory}", ModBase.ShortenPath(GetNativesFolder()));
         gameArguments.Add("${library_directory}", ModBase.ShortenPath(ModFolder.mcFolderSelected + "libraries"));
         gameArguments.Add("${libraries_directory}", ModBase.ShortenPath(ModFolder.mcFolderSelected + "libraries"));
-        gameArguments.Add("${launcher_name}", "PCLSE");
+        gameArguments.Add("${launcher_name}", "PCLXE");
         gameArguments.Add("${launcher_version}", ModBase.versionCode.ToString());
         gameArguments.Add("${version_name}", instance.Name);
         var argumentInfo = Config.Instance.TypeInfo[ModInstanceList.McMcInstanceSelected?.PathInstance];

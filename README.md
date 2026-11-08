@@ -14,7 +14,7 @@
 
 | 功能 | 说明 |
 | --- | --- |
-| 网易版 | 自动定位「我的世界中国版」客户端的 `.minecraft`（也可手动选择），把该目录注册为 PCL 的游戏文件夹，读取 `versions` 下的版本 JSON，**直接用 Java 版启动管线启动游戏**，不再唤起官方启动器。支持选择启动版本、查看目录与版本列表。 |
+| 网易版 | 只识别带中国版特征的「我的世界中国版」`.minecraft`（MCLDownload / netease 文件 / 版本 JSON 中的 netease 字段），也可手动选择；把该目录注册为 PCL 的游戏文件夹，读取 `versions` 下的版本 JSON，**直接用 Java 版启动管线启动游戏**，不再唤起官方启动器。国际版 `.minecraft` 不会被误认为网易版。 |
 | 模组管理 | 回到原版位置：实例 → 版本设置 → 模组管理，沿用上游的启用 / 禁用、`.disabled` 后缀与元数据解析逻辑，不再占用独立分页。 |
 | 问问 AI | 对话式操作启动器：配置任意 OpenAI 兼容 `/chat/completions` 接口后，可对 AI 说「帮我装个模组」，AI 返回 JSON 指令，程序解析后按白名单自动执行。 |
 | 图标与品牌 | 图标、窗口标题、界面文本统一为 XE，不再出现 SE 字样。 |
@@ -24,6 +24,7 @@
 - 只读取本机已存在的中国版 `.minecraft`，**不下载、不破解、不读取网易账号**；账号验证、版本下载与组件安装仍由官方客户端负责。
 - 启动复用 PCL 的 Java 版管线（离线账号、自动选择 Java、资源与库路径指向该 `.minecraft`），因此版本 JSON 必须完整；若中国版版本经过深度定制或需要网易登录，表现可能与官方启动器不同。
 - 首次启动会把该 `.minecraft` 写进游戏文件夹列表，方便之后在启动页直接切换。
+- 自动扫描只收录能确认是中国版的目录：路径含 `MCLDownload` / `netease`，或目录内存在 netease 相关文件，或版本 JSON 里带 netease 字段。国际版（PCL / 官方启动器 / 第三方启动器）的 `.minecraft` 结构完全一样，因此不会被自动列出；手动选择这类目录时页面会给出警告。
 
 ### 问问 AI 的 JSON 协议
 
@@ -64,7 +65,7 @@
 
 PCL Symbio Edition（Plain Craft Launcher Symbio Edition）是由 Hydrogen-Peroxide 维护的第三方 Minecraft 启动器，基于 PCL 开源代码开发，在保留原有交互习惯的基础上补齐了基岩版支持、实例管理与资源下载等能力。
 
-- PCL XE 版本：`2.17.14-xe.1`
+- PCL XE 版本：`2.14.00`（独立版本号，不再跟随上游序列）
 - 上游基线：PCL Symbio Edition `2.17.14`（再上游 PCL `2.12.1`）
 - 技术栈：C# / WPF / .NET 10
 
@@ -130,9 +131,9 @@ PCL Symbio Edition 与 PCL 官方版没有隶属关系，请不要向官方仓�
 
 1. 从 [Releases](https://github.com/Hydrogen-Peroxide/PCL-Symbio-Edition/releases) 下载最新版本的发布包
 2. 解压到任意目录（启动器为绿色便携版，不会写入系统目录）
-3. 运行 `Plain Craft Launcher 2.exe`，选择 Java 版、基岩版、网易版或进入「模组管理」「问问 AI」
+3. 运行 `Plain Craft Launcher 2.exe`，选择 Java 版、基岩版，或进入「网易版」「问问 AI」；模组管理在 实例 → 版本设置 → 模组管理
 
-> PCL XE 已停用上游自动更新源，避免被上游 PCL Symbio Edition 的 Release 覆盖。请从本分支的发布页手动获取更新。
+> PCL XE 使用独立版本号 `2.14.00`，已停用自动更新检查，避免被上游 PCL Symbio Edition 的 Release 覆盖。请从本分支的发布页手动获取更新。
 
 官方发布包为框架依赖版本，需要预先安装 [.NET 10 Desktop Runtime](https://get.dot.net/10)；若使用自包含方式自行构建，则无需额外安装运行时。
 

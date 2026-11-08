@@ -28,7 +28,17 @@ public partial class PageSetupUpdate
 
         TextCurrentVersion.Text = "PCL XE " + VersionNameFormat(ModBase.versionBaseName);
         ModAnimation.AniEndControl();
-        CheckUpdate();
+        // PCL XE 使用自己的版本号，上游 PCL Symbio Edition 的更新源不适用：
+        // 检查只会得到上游版本，安装后会覆盖 XE，因此这里直接停用自动更新。
+        ShowSelfUpdateDisabled();
+    }
+
+    private void ShowSelfUpdateDisabled()
+    {
+        CardUpdate.Visibility = Visibility.Collapsed;
+        CardCheck.Visibility = Visibility.Visible;
+        TextCurrentDesc.Text = Lang.Text("Setup.Update.Xe.Disabled", ModBase.versionBaseName);
+        BtnCheckAgain.IsEnabled = false;
     }
 
     private async Task<UpdateStatus> IsLatestAsync()
@@ -62,8 +72,17 @@ public partial class PageSetupUpdate
         }
     }
 
+    /// <summary>PCL XE 的版本号独立于上游，不提供自动更新。</summary>
+    private static readonly bool SelfUpdateDisabled = true;
+
     public async void CheckUpdate()
     {
+        if (SelfUpdateDisabled)
+        {
+            ShowSelfUpdateDisabled();
+            return;
+        }
+
         ModBase.Log("[Update] 开始检查更新");
         CardUpdate.Visibility = Visibility.Collapsed;
         CardCheck.Visibility = Visibility.Visible;

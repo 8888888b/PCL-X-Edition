@@ -64,10 +64,12 @@ public static class Paths
     static Paths()
     {
 #if DEBUG
-        const string name = "PCLSE_Debug";
+        const string name = "PCLXE_Debug";
+        const string legacyName = "PCLSE_Debug";
         const string oldName = ".PCLSEDebug";
 #else
-        const string name = "PCLSE";
+        const string name = "PCLXE";
+        const string legacyName = "PCLSE";
         const string oldName = ".PCLSE";
 #endif
         // fill paths
@@ -83,10 +85,30 @@ public static class Paths
         EnvironmentInterop.ReadVariable("PCL_PATH_LOCAL", ref _sharedLocalData);
         EnvironmentInterop.ReadVariable("PCL_PATH_TEMP", ref _temp);
 #endif
+        // PCL XE 更名：把上游 PCL Symbio Edition 的数据目录整体迁移过来，保留已有配置
+        MigrateLegacyDirectory(GetSpecialPath(Special.ApplicationData, legacyName), _sharedData);
+        MigrateLegacyDirectory(GetSpecialPath(Special.LocalApplicationData, legacyName), _sharedLocalData);
         // create directories
         Directory.CreateDirectory(_data);
         Directory.CreateDirectory(_sharedData);
         Directory.CreateDirectory(_sharedLocalData);
         Directory.CreateDirectory(_temp);
+    }
+
+    /// <summary>
+    /// 把旧品牌的数据目录迁移到新目录；仅在目标不存在且来源存在时执行，失败则继续使用新目录。
+    /// </summary>
+    private static void MigrateLegacyDirectory(string legacy, string target)
+    {
+        try
+        {
+            if (string.Equals(legacy, target, StringComparison.OrdinalIgnoreCase)) return;
+            if (!Directory.Exists(legacy) || Directory.Exists(target)) return;
+            Directory.Move(legacy, target);
+        }
+        catch
+        {
+            // 迁移失败（如目录被占用）时忽略，用户可手动复制
+        }
     }
 }

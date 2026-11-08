@@ -35,7 +35,7 @@ internal sealed class BedrockIsolationManager
         _log = log ?? (_ => { });
         var identity = Convert.ToHexString(SHA256.HashData(
             Encoding.UTF8.GetBytes(_appDataDirectory.ToUpperInvariant())));
-        _mutexName = "PCLSE.BedrockIsolation." + identity[..24];
+        _mutexName = "PCLXE.BedrockIsolation." + identity[..24];
         using var owner = Process.GetCurrentProcess();
         _ownerProcessId = owner.Id;
         _ownerStartTimeTicks = owner.StartTime.ToUniversalTime().Ticks;

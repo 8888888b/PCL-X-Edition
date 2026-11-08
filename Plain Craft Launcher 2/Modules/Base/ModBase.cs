@@ -113,9 +113,30 @@ public static class ModBase
     /// <summary>
     ///     AppData 中的 PCL XE 配置文件夹路径，以 \ 结尾。
     /// </summary>
-    public static string pathAppdataConfig = GetLegacyAppDataPath("legacy-shared",
-        Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-            versionBranchName == "Debug" ? ".pclsedebug" : ".pclse")) + @"\";
+    public static string pathAppdataConfig = GetLegacyAppDataPath("legacy-shared", ResolveSharedConfigPath()) + @"\";
+
+    /// <summary>
+    ///     解析 PCL XE 的配置目录：优先使用 .pclxe，首次升级时把旧的 .pclse 整体迁移过来，保留已有配置。
+    /// </summary>
+    private static string ResolveSharedConfigPath()
+    {
+        var appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+        var isDebug = versionBranchName == "Debug";
+        var target = Path.Combine(appData, isDebug ? ".pclxedebug" : ".pclxe");
+        var legacy = Path.Combine(appData, isDebug ? ".pclsedebug" : ".pclse");
+
+        if (Directory.Exists(target) || !Directory.Exists(legacy)) return target;
+        try
+        {
+            Directory.Move(legacy, target);
+            return target;
+        }
+        catch
+        {
+            // 迁移失败时继续沿用旧目录，避免配置整体丢失
+            return legacy;
+        }
+    }
 
     private static string GetLegacyAppDataPath(string isolatedName, string fallback)
     {
