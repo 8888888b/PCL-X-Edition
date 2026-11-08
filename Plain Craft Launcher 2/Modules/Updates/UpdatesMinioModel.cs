@@ -118,7 +118,7 @@ public class UpdatesMinioModel : IUpdateSource // 社区自己的更新系统格
                 {
                     // 尝试找到目标条目
                     var entry = zip.Entries
-                        .FirstOrDefault(x => x.Name.Contains("Plain Craft Launcher Symbio Edition.exe")) ?? zip
+                        .FirstOrDefault(x => x.Name.Contains("Plain Craft Launcher XE.exe")) ?? zip
                         .Entries
                         .FirstOrDefault(x => x.Name.Contains("Plain Craft Launcher"));
 

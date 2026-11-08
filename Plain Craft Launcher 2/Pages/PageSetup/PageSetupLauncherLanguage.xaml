@@ -108,7 +108,7 @@
                                         FontSize="42"
                                         FontWeight="Bold"
                                         Foreground="{DynamicResource ColorBrush1}"
-                                        Text="PCL SE"
+                                        Text="PCL XE"
                                         TextWrapping="Wrap" />
                                 </StackPanel>
 

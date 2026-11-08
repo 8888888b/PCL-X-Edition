@@ -29,13 +29,13 @@
                 <local:MyCard Margin="0,0,0,15" Title="{DynamicResource Xe.Ai.Left.Examples}">
                     <StackPanel Margin="21,36,21,15">
                         <local:MyButton x:Name="BtnExample1" Height="32" Margin="0,0,0,8"
-                                        Text="{DynamicResource Xe.Ai.Example1}" Click="BtnExample1_Click" />
+                                        Text="{DynamicResource Xe.Ai.Example1}" />
                         <local:MyButton x:Name="BtnExample2" Height="32" Margin="0,0,0,8"
-                                        Text="{DynamicResource Xe.Ai.Example2}" Click="BtnExample2_Click" />
+                                        Text="{DynamicResource Xe.Ai.Example2}" />
                         <local:MyButton x:Name="BtnExample3" Height="32" Margin="0,0,0,8"
-                                        Text="{DynamicResource Xe.Ai.Example3}" Click="BtnExample3_Click" />
+                                        Text="{DynamicResource Xe.Ai.Example3}" />
                         <local:MyButton x:Name="BtnExample4" Height="32"
-                                        Text="{DynamicResource Xe.Ai.Example4}" Click="BtnExample4_Click" />
+                                        Text="{DynamicResource Xe.Ai.Example4}" />
                     </StackPanel>
                 </local:MyCard>
 

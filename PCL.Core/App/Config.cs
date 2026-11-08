@@ -506,7 +506,7 @@ public static partial class Config
         /// <summary>
         /// 自定义左下角版本信息。
         /// </summary>
-        [ConfigItem<string>("LaunchArgumentInfo", "PCL SE", ConfigSource.Local)] public partial string TypeInfo { get; set; }
+        [ConfigItem<string>("LaunchArgumentInfo", "PCL XE", ConfigSource.Local)] public partial string TypeInfo { get; set; }
 
         /// <summary>
         /// 选择的默认 Java 实例。
@@ -653,6 +653,9 @@ public static partial class Config
 
             [ConfigItem<string>("XeNeteaseGameDir", "", ConfigSource.Local)]
             public partial string GameDir { get; set; }
+
+            [ConfigItem<string>("XeNeteaseVersion", "", ConfigSource.Local)]
+            public partial string SelectedVersion { get; set; }
         }
 
         /// <summary>模组管理配置。</summary>

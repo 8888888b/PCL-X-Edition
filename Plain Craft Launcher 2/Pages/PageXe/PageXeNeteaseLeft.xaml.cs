@@ -1,5 +1,4 @@
 using System.IO;
-using System.Windows;
 using PCL.Core.App.Localization;
 
 namespace PCL;
@@ -10,7 +9,7 @@ public partial class PageXeNeteaseLeft
     {
         InitializeComponent();
         Loaded += (_, _) => Refresh();
-        BtnLaunch.Click += (_, _) => ModMain.frmXeNeteaseRight?.LaunchClient();
+        BtnLaunch.Click += (_, _) => ModMain.frmXeNeteaseRight?.LaunchSelected();
         BtnRefresh.Click += (_, _) =>
         {
             ModMain.frmXeNeteaseRight?.Refresh();
@@ -25,17 +24,20 @@ public partial class PageXeNeteaseLeft
         var first = candidates.FirstOrDefault();
         LabStatus.Text = first is null
             ? Lang.Text("Xe.Netease.Status.NotDetected")
-            : Lang.Text("Xe.Netease.Status.Detected", Path.GetFileName(first.Path));
+            : Lang.Text("Xe.Netease.Status.Detected", new DirectoryInfo(first.Path).Name);
 
-        ItemLauncher.Title = Lang.Text("Xe.Netease.Path.Label");
-        ItemLauncher.Info = first?.Path ?? "—";
-        ItemSource.Title = Lang.Text("Xe.Netease.Candidate.Source", first?.Source ?? "—");
-        ItemSource.Info = Lang.Text("Xe.Netease.Detect.Done", candidates.Count);
+        ItemDir.Title = Lang.Text("Xe.Netease.McDir.Label");
+        ItemDir.Info = first?.Path ?? "—";
 
-        var versions = XeNeteaseService.GetVersionNames();
-        ItemVersions.Title = Lang.Text("Xe.Netease.Right.VersionsTitle");
+        var versions = XeNeteaseService.GetVersions(first?.Path);
+        ItemVersions.Title = Lang.Text("Xe.Netease.Left.Versions");
         ItemVersions.Info = versions.Count == 0
             ? Lang.Text("Xe.Netease.Versions.Empty")
-            : string.Join(", ", versions.Take(4)) + (versions.Count > 4 ? "…" : "");
+            : versions.Count <= 3
+                ? string.Join(", ", versions)
+                : string.Join(", ", versions.Take(3)) + "…";
+
+        ItemSource.Title = Lang.Text("Xe.Netease.Candidate.Source", first?.Source ?? "—");
+        ItemSource.Info = Lang.Text("Xe.Netease.Detect.Done", candidates.Count);
     }
 }

@@ -14,45 +14,38 @@
                     <StackPanel x:Name="PanCandidates" />
                     <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
                         <local:MyButton x:Name="BtnRefresh" Height="32" MinWidth="130" Padding="13,0"
-                                        Text="{DynamicResource Xe.Netease.Btn.Refresh}" Click="BtnRefresh_Click" />
+                                        Text="{DynamicResource Xe.Netease.Btn.Refresh}" />
                         <local:MyButton x:Name="BtnLaunch" Height="32" MinWidth="150" Padding="13,0" Margin="10,0,0,0"
-                                        ColorType="Highlight" Text="{DynamicResource Xe.Netease.Btn.Launch}"
-                                        Click="BtnLaunch_Click" />
+                                        ColorType="Highlight" Text="{DynamicResource Xe.Netease.Btn.Launch}" />
                     </StackPanel>
                 </StackPanel>
             </local:MyCard>
 
             <local:MyCard Margin="0,0,0,15" Title="{DynamicResource Xe.Netease.Right.ConfigTitle}">
                 <StackPanel Margin="21,36,21,15">
-                    <TextBlock Text="{DynamicResource Xe.Netease.Path.Label}" Margin="0,0,0,4" />
+                    <TextBlock Text="{DynamicResource Xe.Netease.McDir.Label}" Margin="0,0,0,4" />
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="1*" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <local:MyTextBox x:Name="TextLauncherPath" Grid.Column="0" Height="30"
-                                         HintText="{DynamicResource Xe.Netease.Path.Hint}"
+                        <local:MyTextBox x:Name="TextMcDir" Grid.Column="0" Height="30"
+                                         HintText="{DynamicResource Xe.Netease.McDir.Hint}"
                                          LostFocus="Config_LostFocus" />
-                        <local:MyButton x:Name="BtnBrowse" Grid.Column="1" Height="30" MinWidth="90" Margin="8,0,0,0"
-                                        Padding="10,0" Text="{DynamicResource Xe.Netease.Btn.Browse}"
-                                        Click="BtnBrowse_Click" />
+                        <local:MyButton x:Name="BtnBrowseDir" Grid.Column="1" Height="30" MinWidth="90" Margin="8,0,0,0"
+                                        Padding="10,0" Text="{DynamicResource Xe.Netease.Btn.BrowseDir}" />
                     </Grid>
 
-                    <TextBlock Text="{DynamicResource Xe.Netease.Args.Label}" Margin="0,10,0,4" />
-                    <local:MyTextBox x:Name="TextLaunchArgs" Height="30"
-                                     HintText="{DynamicResource Xe.Netease.Args.Hint}"
-                                     LostFocus="Config_LostFocus" />
-
-                    <TextBlock Text="{DynamicResource Xe.Netease.GameDir.Label}" Margin="0,10,0,4" />
-                    <local:MyTextBox x:Name="TextGameDir" Height="30"
-                                     HintText="{DynamicResource Xe.Netease.GameDir.Hint}"
+                    <TextBlock Text="{DynamicResource Xe.Netease.Version.Label}" Margin="0,10,0,4" />
+                    <local:MyTextBox x:Name="TextVersion" Height="30"
+                                     HintText="{DynamicResource Xe.Netease.Version.Hint}"
                                      LostFocus="Config_LostFocus" />
 
                     <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
                         <local:MyButton x:Name="BtnSave" Height="32" MinWidth="130" Padding="13,0"
-                                        Text="{DynamicResource Xe.Ai.Config.Save}" Click="BtnSave_Click" />
+                                        Text="{DynamicResource Xe.Ai.Config.Save}" />
                         <local:MyButton x:Name="BtnOpenFolder" Height="32" MinWidth="150" Padding="13,0" Margin="10,0,0,0"
-                                        Text="{DynamicResource Xe.Netease.Btn.OpenFolder}" Click="BtnOpenFolder_Click" />
+                                        Text="{DynamicResource Xe.Netease.Btn.OpenFolder}" />
                     </StackPanel>
                 </StackPanel>
             </local:MyCard>

@@ -2,6 +2,7 @@ using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using Microsoft.Win32;
 using PCL.Core.App;
 using PCL.Core.App.Localization;
@@ -15,9 +16,19 @@ public partial class PageXeNeteaseRight
         InitializeComponent();
         Loaded += (_, _) => Refresh();
         PageEnter += Refresh; // 页面被缓存，每次重新进入都要重新扫描
+        BtnRefresh.Click += (_, _) => Refresh();
+        BtnLaunch.Click += (_, _) => LaunchSelected();
+        BtnBrowseDir.Click += (_, _) => BrowseDir();
+        BtnSave.Click += (_, _) =>
+        {
+            SaveConfig();
+            Refresh();
+            HintService.Hint(Lang.Text("Xe.Ai.Config.Saved"), HintType.Success);
+        };
+        BtnOpenFolder.Click += (_, _) => XeNeteaseService.OpenGameDir();
     }
 
-    /// <summary>重新扫描客户端并刷新当前页与左栏状态。</summary>
+    /// <summary>重新扫描 .minecraft 并刷新当前页与左栏状态。</summary>
     public void Refresh()
     {
         LoadConfig();
@@ -28,16 +39,14 @@ public partial class PageXeNeteaseRight
 
     private void LoadConfig()
     {
-        if (!TextLauncherPath.IsFocused) TextLauncherPath.Text = Config.Xe.Netease.LauncherPath;
-        if (!TextLaunchArgs.IsFocused) TextLaunchArgs.Text = Config.Xe.Netease.LaunchArgs;
-        if (!TextGameDir.IsFocused) TextGameDir.Text = Config.Xe.Netease.GameDir;
+        if (!TextMcDir.IsFocused) TextMcDir.Text = Config.Xe.Netease.GameDir;
+        if (!TextVersion.IsFocused) TextVersion.Text = Config.Xe.Netease.SelectedVersion;
     }
 
     private void SaveConfig()
     {
-        Config.Xe.Netease.LauncherPath = TextLauncherPath.Text.Trim();
-        Config.Xe.Netease.LaunchArgs = TextLaunchArgs.Text.Trim();
-        Config.Xe.Netease.GameDir = TextGameDir.Text.Trim();
+        Config.Xe.Netease.GameDir = TextMcDir.Text.Trim();
+        Config.Xe.Netease.SelectedVersion = TextVersion.Text.Trim();
     }
 
     private void RebuildCandidates()
@@ -51,25 +60,36 @@ public partial class PageXeNeteaseRight
                 Text = Lang.Text("Xe.Netease.Launch.NotFound"),
                 TextWrapping = TextWrapping.Wrap,
                 Margin = new Thickness(0, 0, 0, 6),
-                Foreground = (System.Windows.Media.Brush)FindResource("ColorBrushGray5")
+                Foreground = (Brush)FindResource("ColorBrushGray5")
             });
             return;
         }
-        foreach (var candidate in candidates.Take(8))
-            PanCandidates.Children.Add(new MyListItem
+
+        foreach (var candidate in candidates.Take(5))
+        {
+            var item = new MyListItem
             {
-                Title = candidate.Name,
-                Info = $"{candidate.Path}  ·  {Lang.Text("Xe.Netease.Candidate.Source", candidate.Source)}",
-                SvgIcon = "lucide/play",
-                Height = 45,
-                IsHitTestVisible = false
-            });
+                Title = new DirectoryInfo(candidate.Path).Name,
+                Info = candidate.Path + "  ·  " + Lang.Text("Xe.Netease.Candidate.Source", candidate.Source),
+                SvgIcon = "lucide/folder-open",
+                Height = 45
+            };
+            item.Click += (_, _) =>
+            {
+                TextMcDir.Text = candidate.Path;
+                TextVersion.Text = "";
+                SaveConfig();
+                Refresh();
+            };
+            PanCandidates.Children.Add(item);
+        }
     }
 
     private void RebuildVersions()
     {
         PanVersions.Children.Clear();
-        var versions = XeNeteaseService.GetVersionNames();
+        var dir = string.IsNullOrWhiteSpace(TextMcDir.Text) ? null : TextMcDir.Text.Trim();
+        var versions = XeNeteaseService.GetVersions(dir);
         if (versions.Count == 0)
         {
             PanVersions.Children.Add(new TextBlock
@@ -79,61 +99,56 @@ public partial class PageXeNeteaseRight
             });
             return;
         }
+
+        var selected = string.IsNullOrWhiteSpace(TextVersion.Text)
+            ? XeNeteaseService.GetPreferredVersion(dir)
+            : TextVersion.Text.Trim();
+
         foreach (var version in versions)
-            PanVersions.Children.Add(new MyListItem
-            {
-                Title = version,
-                SvgIcon = "lucide/folder-open",
-                Height = 38,
-                IsHitTestVisible = false
-            });
-    }
-
-    public void LaunchClient()
-    {
-        SaveConfig();
-        var ok = XeNeteaseService.Launch(out var message);
-        HintService.Hint(message, ok ? HintType.Success : HintType.Warning);
-        Refresh();
-    }
-
-    private void BtnLaunch_Click(object sender, MouseButtonEventArgs e) => LaunchClient();
-
-    private void BtnRefresh_Click(object sender, MouseButtonEventArgs e)
-    {
-        SaveConfig();
-        Refresh();
-        HintService.Hint(Lang.Text("Xe.Netease.Detect.Done", XeNeteaseService.Detect().Count));
-    }
-
-    private void BtnBrowse_Click(object sender, MouseButtonEventArgs e)
-    {
-        var dialog = new OpenFileDialog
         {
-            Title = Lang.Text("Xe.Netease.Browse.Title"),
-            Filter = Lang.Text("Xe.Netease.Browse.Filter"),
-            CheckFileExists = true
+            var isSelected = string.Equals(version, selected, StringComparison.OrdinalIgnoreCase);
+            var button = new MyButton
+            {
+                Text = version,
+                Height = 32,
+                Margin = new Thickness(0, 0, 0, 6),
+                HorizontalAlignment = HorizontalAlignment.Stretch,
+                ColorType = isSelected ? MyButton.ColorState.Highlight : MyButton.ColorState.Normal
+            };
+            button.Click += (_, _) =>
+            {
+                TextVersion.Text = version;
+                SaveConfig();
+                RebuildVersions();
+            };
+            PanVersions.Children.Add(button);
+        }
+    }
+
+    /// <summary>启动当前选中（或最近使用）的版本。</summary>
+    public void LaunchSelected()
+    {
+        SaveConfig();
+        var version = string.IsNullOrWhiteSpace(TextVersion.Text) ? null : TextVersion.Text.Trim();
+        var ok = XeNeteaseService.Launch(version, out var message);
+        HintService.Hint(message, ok ? HintType.Success : HintType.Warning);
+        if (ok) Refresh();
+    }
+
+    private void BrowseDir()
+    {
+        var dialog = new OpenFolderDialog
+        {
+            Title = Lang.Text("Xe.Netease.BrowseDir.Title"),
+            Multiselect = false
         };
-        var current = TextLauncherPath.Text.Trim();
-        if (!string.IsNullOrEmpty(current) && Directory.Exists(Path.GetDirectoryName(current)))
-            dialog.InitialDirectory = Path.GetDirectoryName(current);
+        var current = TextMcDir.Text.Trim();
+        if (Directory.Exists(current)) dialog.InitialDirectory = current;
         if (dialog.ShowDialog() != true) return;
-        TextLauncherPath.Text = dialog.FileName;
+        TextMcDir.Text = dialog.FolderName;
+        TextVersion.Text = "";
         SaveConfig();
         Refresh();
-    }
-
-    private void BtnSave_Click(object sender, MouseButtonEventArgs e)
-    {
-        SaveConfig();
-        Refresh();
-        HintService.Hint(Lang.Text("Xe.Ai.Config.Saved"), HintType.Success);
-    }
-
-    private void BtnOpenFolder_Click(object sender, MouseButtonEventArgs e)
-    {
-        SaveConfig();
-        XeNeteaseService.OpenGameDir();
     }
 
     private void Config_LostFocus(object sender, RoutedEventArgs e) => SaveConfig();

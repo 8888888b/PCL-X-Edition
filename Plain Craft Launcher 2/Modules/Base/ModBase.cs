@@ -111,7 +111,7 @@ public static class ModBase
         Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "PCL")) + @"\";
 
     /// <summary>
-    ///     AppData 中的 PCL SE 配置文件夹路径，以 \ 结尾。
+    ///     AppData 中的 PCL XE 配置文件夹路径，以 \ 结尾。
     /// </summary>
     public static string pathAppdataConfig = GetLegacyAppDataPath("legacy-shared",
         Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),

@@ -1,6 +1,6 @@
 ## ✨ PCL.Core
 
-这是为 PCL SE（PCL Symbio Edition）特别开发的核心库，由 Hydrogen-Peroxide 开发与维护
+这是为 PCL XE（PCL Symbio Edition）特别开发的核心库，由 Hydrogen-Peroxide 开发与维护
 
 ## 🔒 协议
 

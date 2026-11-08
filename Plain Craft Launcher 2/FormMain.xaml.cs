@@ -1393,11 +1393,6 @@ public partial class FormMain
         Netease = 14,
 
         /// <summary>
-        ///     PCL XE：模组管理。
-        /// </summary>
-        ModManager = 15,
-
-        /// <summary>
         ///     PCL XE：问问 AI。
         /// </summary>
         AskAi = 16,
@@ -1905,13 +1900,6 @@ public partial class FormMain
                         ModMain.frmXeNeteaseLeft ??= new PageXeNeteaseLeft();
                         ModMain.frmXeNeteaseRight ??= new PageXeNeteaseRight();
                         PageChangeAnim(ModMain.frmXeNeteaseLeft, ModMain.frmXeNeteaseRight);
-                        break;
-                    }
-                case PageType.ModManager: // PCL XE：模组管理
-                    {
-                        ModMain.frmXeModManagerLeft ??= new PageXeModManagerLeft();
-                        ModMain.frmXeModManagerRight ??= new PageXeModManagerRight();
-                        PageChangeAnim(ModMain.frmXeModManagerLeft, ModMain.frmXeModManagerRight);
                         break;
                     }
                 case PageType.AskAi: // PCL XE：问问 AI

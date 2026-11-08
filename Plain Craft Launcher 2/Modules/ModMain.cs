@@ -99,8 +99,6 @@ public static class ModMain
     // PCL XE 扩展页面
     public static PageXeNeteaseLeft? frmXeNeteaseLeft;
     public static PageXeNeteaseRight? frmXeNeteaseRight;
-    public static PageXeModManagerLeft? frmXeModManagerLeft;
-    public static PageXeModManagerRight? frmXeModManagerRight;
     public static PageXeAskAiLeft? frmXeAskAiLeft;
     public static PageXeAskAiRight? frmXeAskAiRight;
 

@@ -20,28 +20,27 @@
 
                 <local:MyCard Margin="0,0,0,15" Title="{DynamicResource Xe.Netease.Left.Status}">
                     <StackPanel Margin="21,36,21,12">
-                        <local:MyListItem x:Name="ItemLauncher" Height="40" IsHitTestVisible="False"
-                                          SvgIcon="lucide/play" />
+                        <local:MyListItem x:Name="ItemDir" Height="40" IsHitTestVisible="False"
+                                          SvgIcon="lucide/folder-open" />
+                        <local:MyListItem x:Name="ItemVersions" Height="40" IsHitTestVisible="False"
+                                          SvgIcon="lucide/package" />
                         <local:MyListItem x:Name="ItemSource" Height="40" IsHitTestVisible="False"
                                           SvgIcon="lucide/info" />
-                        <local:MyListItem x:Name="ItemVersions" Height="40" IsHitTestVisible="False"
-                                          SvgIcon="lucide/folder-open" />
                     </StackPanel>
                 </local:MyCard>
 
                 <local:MyCard Margin="0,0,0,15" Title="{DynamicResource Xe.Netease.Left.Actions}">
                     <StackPanel Margin="21,36,21,15">
                         <local:MyButton x:Name="BtnLaunch" Height="34" Margin="0,0,0,8"
-                                        Text="{DynamicResource Xe.Netease.Btn.Launch}" ColorType="Highlight"
-                                        Click="BtnLaunch_Click" />
+                                        Text="{DynamicResource Xe.Netease.Btn.Launch}" ColorType="Highlight" />
                         <local:MyButton x:Name="BtnRefresh" Height="34" Margin="0,0,0,8"
-                                        Text="{DynamicResource Xe.Netease.Btn.Refresh}" Click="BtnRefresh_Click" />
+                                        Text="{DynamicResource Xe.Netease.Btn.Refresh}" />
                         <local:MyButton x:Name="BtnOpenFolder" Height="34"
-                                        Text="{DynamicResource Xe.Netease.Btn.OpenFolder}" Click="BtnOpenFolder_Click" />
+                                        Text="{DynamicResource Xe.Netease.Btn.OpenFolder}" />
                     </StackPanel>
                 </local:MyCard>
 
-                <local:MyHint Theme="Blue" Text="{DynamicResource Xe.Mods.Block.Netease}" />
+                <local:MyHint Theme="Blue" Text="{DynamicResource Xe.Netease.Left.Hint}" />
             </StackPanel>
         </local:MyScrollViewer>
     </Grid>

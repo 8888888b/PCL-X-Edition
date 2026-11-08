@@ -113,11 +113,7 @@ public static class XeAiActions
             case "open_mods":
             {
                 SelectInstance(action.Str("instance"));
-                Ui(() =>
-                {
-                    ModMain.frmMain?.PageChange(FormMain.PageType.ModManager);
-                    ModMain.frmXeModManagerRight?.Refresh();
-                });
+                Ui(() => ModMain.frmMain?.PageChange(FormMain.PageType.InstanceSetup, FormMain.PageSubType.VersionMod));
                 return Lang.Text("Xe.Ai.Action.ModsOpened");
             }
 
@@ -133,7 +129,7 @@ public static class XeAiActions
             }
 
             case "refresh_mods":
-                Ui(() => ModMain.frmXeModManagerRight?.Refresh());
+                Ui(() => PageInstanceCompResource.Refresh(ModComp.CompType.Mod));
                 return Lang.Text("Xe.Ai.Action.ModsRefreshed");
 
             case "set_target_mode":
@@ -146,11 +142,7 @@ public static class XeAiActions
                     _ => XeModTargetMode.Client
                 };
                 XeModService.CurrentMode = mode;
-                Ui(() =>
-                {
-                    ModMain.frmXeModManagerLeft?.Refresh();
-                    ModMain.frmXeModManagerRight?.Refresh();
-                });
+                Ui(() => ModMain.frmXeAskAiLeft?.Refresh());
                 return Lang.Text("Xe.Ai.Action.ModeChanged", modeName);
             }
 
@@ -215,7 +207,7 @@ public static class XeAiActions
         var loader = action.Str("loader", "mod_loader") ?? "";
         var result = await XeModService.InstallFromModrinthAsync(keyword ?? "", mcVersion, loader, folder, ct)
             .ConfigureAwait(false);
-        Ui(() => ModMain.frmXeModManagerRight?.Refresh());
+        Ui(() => PageInstanceCompResource.Refresh(ModComp.CompType.Mod));
         return result.Message;
     }
 
@@ -232,7 +224,7 @@ public static class XeAiActions
             m.DisplayName.Contains(keyword, StringComparison.OrdinalIgnoreCase));
         if (match is null) return Lang.Text("Xe.Ai.Action.ModNotFound", keyword);
         var result = XeModService.SetEnabled(match, enable, mode, instance);
-        Ui(() => ModMain.frmXeModManagerRight?.Refresh());
+        Ui(() => PageInstanceCompResource.Refresh(ModComp.CompType.Mod));
         return result.Message;
     }
 
@@ -253,7 +245,7 @@ public static class XeAiActions
             case "bedrock": page = FormMain.PageType.Bedrock; return true;
             case "netease" or "china": page = FormMain.PageType.Netease; return true;
             case "download": page = FormMain.PageType.Download; return true;
-            case "modmanager" or "mods" or "mod": page = FormMain.PageType.ModManager; return true;
+            case "modmanager" or "mods" or "mod": page = FormMain.PageType.InstanceSetup; return true;
             case "setup" or "settings": page = FormMain.PageType.Setup; return true;
             case "tools": page = FormMain.PageType.Tools; return true;
             case "askai" or "ai": page = FormMain.PageType.AskAi; return true;
