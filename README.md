@@ -4,6 +4,8 @@
 
 <img src="Plain Craft Launcher 2/Images/icon.png" alt="Logo" width="80" height="80">
 
+</div>
+
 # PCL XE
 
 > **PCL XE（Plain Craft Launcher eXtended Edition）** 是基于 [PCL Symbio Edition](https://github.com/Hydrogen-Peroxide/PCL-Symbio-Edition) 的实验性分支，在此基础上新增「网易版启动」「模组管理」「问问 AI」三个顶层分页。下文「上游基线」部分描述的是 PCL SE 的原有能力，XE 完整保留。
@@ -47,6 +49,8 @@
 ---
 
 # PCL Symbio Edition（上游基线说明）
+
+<div align="center">
 
 [![Stars](https://img.shields.io/github/stars/Hydrogen-Peroxide/PCL-Symbio-Edition?style=for-the-badge&logo=github&label=stars&labelColor=444444&color=eac54f)](https://github.com/Hydrogen-Peroxide/PCL-Symbio-Edition/stargazers)
 ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/Hydrogen-Peroxide/PCL-Symbio-Edition/build-test.yml?style=for-the-badge)
