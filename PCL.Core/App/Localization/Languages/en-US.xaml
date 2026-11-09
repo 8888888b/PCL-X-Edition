@@ -3993,4 +3993,51 @@
     <sys:String x:Key="Setup.Update.Xe.Disabled">PCL XE {0} has no built-in updater; get builds from its releases.</sys:String>
     <sys:String x:Key="Xe.Netease.Source.ManualUnconfirmed">Manual (not confirmed as China Edition)</sys:String>
     <sys:String x:Key="Xe.Netease.Candidate.Unconfirmed">not confirmed as China Edition</sys:String>
+
+    <!-- Netease: launch diagnostics & error report -->
+    <sys:String x:Key="Xe.Netease.Stage.Detect">Folder detection</sys:String>
+    <sys:String x:Key="Xe.Netease.Stage.Version">Version files</sys:String>
+    <sys:String x:Key="Xe.Netease.Stage.Precheck">Pre-launch checks</sys:String>
+    <sys:String x:Key="Xe.Netease.Stage.Instance">Instance loading</sys:String>
+    <sys:String x:Key="Xe.Netease.Stage.Pipeline">Launch pipeline</sys:String>
+    <sys:String x:Key="Xe.Netease.Stage.Unknown">Unexpected error</sys:String>
+    <sys:String x:Key="Xe.Netease.Check.DirMissing">The .minecraft folder does not exist: {0}</sys:String>
+    <sys:String x:Key="Xe.Netease.Check.VersionMissing">Version {0} is not in the launchable list. Available: {1}</sys:String>
+    <sys:String x:Key="Xe.Netease.Check.NoJson">Version JSON is missing: {0}</sys:String>
+    <sys:String x:Key="Xe.Netease.Check.Unreadable">Cannot read version JSON: {0}</sys:String>
+    <sys:String x:Key="Xe.Netease.Check.BadJson">Version JSON is invalid: {0}</sys:String>
+    <sys:String x:Key="Xe.Netease.Check.MissingInherit">This version inherits from {0}, but versions/{0} does not exist. Download {0} in the official launcher first.</sys:String>
+    <sys:String x:Key="Xe.Netease.Check.NoMainClass">Version JSON has no mainClass, so the entry point is unknown</sys:String>
+    <sys:String x:Key="Xe.Netease.Check.DuplicateKey">The version JSON contains the field "{0}" twice, which is not a valid launcher version file and cannot be parsed by PCL. Re-download or repair this version in the official launcher.</sys:String>
+    <sys:String x:Key="Xe.Netease.Check.UiThread">Must be started on the UI thread</sys:String>
+    <sys:String x:Key="Xe.Netease.Launch.PipelineFailed">Something went wrong while launching</sys:String>
+    <sys:String x:Key="Xe.Netease.Launch.PipelineFailedHint">Netease launch failed. See "Launch → Netease → Diagnostics" for details, where you can copy the error report or open the log.</sys:String>
+    <sys:String x:Key="Xe.Netease.Launch.Aborted">Launch was cancelled</sys:String>
+    <sys:String x:Key="Xe.Netease.Profile.AutoCreated">Created automatically by PCL XE</sys:String>
+    <sys:String x:Key="Xe.Netease.Report.Title">Netease launch failed</sys:String>
+    <sys:String x:Key="Xe.Netease.Report.Header">===== PCL XE Netease launch error report =====</sys:String>
+    <sys:String x:Key="Xe.Netease.Report.Time">Time</sys:String>
+    <sys:String x:Key="Xe.Netease.Report.Launcher">Launcher</sys:String>
+    <sys:String x:Key="Xe.Netease.Report.System">System</sys:String>
+    <sys:String x:Key="Xe.Netease.Report.GameDir">Game folder</sys:String>
+    <sys:String x:Key="Xe.Netease.Report.Version">Version</sys:String>
+    <sys:String x:Key="Xe.Netease.Report.Stage">Failed at</sys:String>
+    <sys:String x:Key="Xe.Netease.Report.Reason">Reason</sys:String>
+    <sys:String x:Key="Xe.Netease.Report.NoFailure">None (launch was started)</sys:String>
+    <sys:String x:Key="Xe.Netease.Report.Exception">Exception</sys:String>
+    <sys:String x:Key="Xe.Netease.Report.Steps">Steps</sys:String>
+    <sys:String x:Key="Xe.Netease.Report.LogFile">Log file</sys:String>
+    <sys:String x:Key="Xe.Netease.Report.LogUnavailable">Log file could not be written, check the main launcher log</sys:String>
+    <sys:String x:Key="Xe.Netease.Btn.CopyReport">Copy report</sys:String>
+    <sys:String x:Key="Xe.Netease.Btn.OpenLog">Open log</sys:String>
+    <sys:String x:Key="Xe.Netease.Btn.OpenLogFolder">Open log folder</sys:String>
+    <sys:String x:Key="Xe.Netease.Diag.Title">Launch diagnostics</sys:String>
+    <sys:String x:Key="Xe.Netease.Diag.NotTried">Netease has not been launched in this session yet. The result, failure reason and log location will appear here.</sys:String>
+    <sys:String x:Key="Xe.Netease.Diag.Success">Last launch: started ({0})</sys:String>
+    <sys:String x:Key="Xe.Netease.Diag.Failed">Last launch: failed ({0})</sys:String>
+    <sys:String x:Key="Xe.Netease.Diag.Detail">Failed at: {0}   Reason: {1}</sys:String>
+    <sys:String x:Key="Xe.Netease.Diag.Version">Version: {0}</sys:String>
+    <sys:String x:Key="Xe.Netease.Diag.LogFile">Log file: {0}</sys:String>
+    <sys:String x:Key="Xe.Netease.Diag.LogFolder">Log folder: {0}</sys:String>
+    <sys:String x:Key="Xe.Netease.Diag.LogUnavailable">The log file could not be written. Check the main launcher log.</sys:String>
 </ResourceDictionary>

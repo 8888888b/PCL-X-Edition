@@ -656,6 +656,10 @@ public static partial class Config
 
             [ConfigItem<string>("XeNeteaseVersion", "", ConfigSource.Local)]
             public partial string SelectedVersion { get; set; }
+
+            /// <summary>没有账号档案时自动创建的离线档案用户名。</summary>
+            [ConfigItem<string>("XeNeteaseOfflineName", "Player", ConfigSource.Local)]
+            public partial string OfflineName { get; set; }
         }
 
         /// <summary>模组管理配置。</summary>

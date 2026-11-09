@@ -26,6 +26,10 @@ public partial class PageXeNeteaseRight
             HintService.Hint(Lang.Text("Xe.Ai.Config.Saved"), HintType.Success);
         };
         BtnOpenFolder.Click += (_, _) => XeNeteaseService.OpenGameDir();
+        BtnCopyReport.Click += (_, _) => CopyReport();
+        BtnOpenLog.Click += (_, _) => XeNeteaseService.OpenLastLog();
+        BtnOpenLogFolder.Click += (_, _) => XeNeteaseService.OpenLogFolder();
+        XeNeteaseService.LaunchFinished += OnLaunchFinished;
     }
 
     /// <summary>重新扫描 .minecraft 并刷新当前页与左栏状态。</summary>
@@ -35,6 +39,7 @@ public partial class PageXeNeteaseRight
         RebuildCandidates();
         RebuildVersions();
         RefreshConfirmHint();
+        RefreshDiagnostics();
         ModMain.frmXeNeteaseLeft?.Refresh();
     }
 
@@ -144,9 +149,81 @@ public partial class PageXeNeteaseRight
         SaveConfig();
         var version = string.IsNullOrWhiteSpace(TextVersion.Text) ? null : TextVersion.Text.Trim();
         var ok = XeNeteaseService.Launch(version, out var message);
-        HintService.Hint(message, ok ? HintType.Success : HintType.Warning);
-        if (ok) Refresh();
+        if (ok)
+        {
+            HintService.Hint(message, HintType.Success);
+            Refresh();
+            return;
+        }
+
+        HintService.Hint(message, HintType.Warning);
+        Refresh();
+        // 启动前的失败（目录、版本、账号、实例）直接把完整报告弹出来，便于用户复制或查看日志
+        var diag = XeNeteaseDiagnostics.Current;
+        if (diag is { IsFailed: true }) XeNeteaseService.ShowFailureReport(diag);
     }
+
+    #region 启动诊断
+
+    private void OnLaunchFinished(XeNeteaseDiagnostics diag)
+    {
+        if (!Dispatcher.CheckAccess())
+        {
+            Dispatcher.Invoke(() => RefreshDiagnostics());
+            return;
+        }
+
+        RefreshDiagnostics();
+    }
+
+    /// <summary>展示最近一次启动的结果、失败原因与日志位置。</summary>
+    private void RefreshDiagnostics()
+    {
+        var diag = XeNeteaseDiagnostics.Current;
+        if (diag is null)
+        {
+            LabDiagStatus.Text = Lang.Text("Xe.Netease.Diag.NotTried");
+            LabDiagDetail.Visibility = Visibility.Collapsed;
+            PanDiagnostics.Visibility = Visibility.Collapsed;
+            LabDiagLog.Text = Lang.Text("Xe.Netease.Diag.LogFolder", XeNeteaseDiagnostics.LogDirectory);
+            return;
+        }
+
+        LabDiagStatus.Text = diag.IsFailed
+            ? Lang.Text("Xe.Netease.Diag.Failed", diag.StartedAt.ToString("yyyy-MM-dd HH:mm:ss"))
+            : Lang.Text("Xe.Netease.Diag.Success", diag.StartedAt.ToString("yyyy-MM-dd HH:mm:ss"));
+
+        if (diag.IsFailed)
+        {
+            LabDiagDetail.Text = Lang.Text("Xe.Netease.Diag.Detail", diag.Stage ?? "—", diag.FailureMessage ?? "—");
+            LabDiagDetail.Visibility = Visibility.Visible;
+        }
+        else
+        {
+            LabDiagDetail.Text = diag.Version is null
+                ? ""
+                : Lang.Text("Xe.Netease.Diag.Version", diag.Version);
+            LabDiagDetail.Visibility = string.IsNullOrWhiteSpace(LabDiagDetail.Text)
+                ? Visibility.Collapsed
+                : Visibility.Visible;
+        }
+
+        LabDiagLog.Text = diag.LogPath is null
+            ? Lang.Text("Xe.Netease.Diag.LogUnavailable")
+            : Lang.Text("Xe.Netease.Diag.LogFile", diag.LogPath);
+        // 成功时也保留「打开日志」，便于排查启动后立刻退出的情况；「复制错误报告」只在失败时出现
+        PanDiagnostics.Visibility = Visibility.Visible;
+        BtnCopyReport.Visibility = diag.IsFailed ? Visibility.Visible : Visibility.Collapsed;
+    }
+
+    private void CopyReport()
+    {
+        var diag = XeNeteaseDiagnostics.Current;
+        if (diag is null) return;
+        ModBase.ClipboardSet(diag.BuildReport());
+    }
+
+    #endregion
 
     private void BrowseDir()
     {

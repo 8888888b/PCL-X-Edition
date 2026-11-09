@@ -24,6 +24,26 @@
                 </StackPanel>
             </local:MyCard>
 
+            <local:MyCard Margin="0,0,0,15" Title="{DynamicResource Xe.Netease.Diag.Title}">
+                <StackPanel Margin="21,36,21,15">
+                    <TextBlock x:Name="LabDiagStatus" TextWrapping="Wrap" FontSize="13"
+                               Foreground="{DynamicResource ColorBrush1}" />
+                    <TextBlock x:Name="LabDiagDetail" TextWrapping="Wrap" Margin="0,6,0,0" FontSize="12"
+                               Foreground="{DynamicResource ColorBrushGray5}" Visibility="Collapsed" />
+                    <TextBlock x:Name="LabDiagLog" TextWrapping="Wrap" Margin="0,6,0,0" FontSize="12"
+                               Foreground="{DynamicResource ColorBrushGray5}" />
+                    <StackPanel x:Name="PanDiagnostics" Orientation="Horizontal" Margin="0,10,0,0"
+                                Visibility="Collapsed">
+                        <local:MyButton x:Name="BtnCopyReport" Height="30" MinWidth="120" Padding="10,0"
+                                        Text="{DynamicResource Xe.Netease.Btn.CopyReport}" />
+                        <local:MyButton x:Name="BtnOpenLog" Height="30" MinWidth="110" Padding="10,0" Margin="8,0,0,0"
+                                        Text="{DynamicResource Xe.Netease.Btn.OpenLog}" />
+                        <local:MyButton x:Name="BtnOpenLogFolder" Height="30" MinWidth="140" Padding="10,0"
+                                        Margin="8,0,0,0" Text="{DynamicResource Xe.Netease.Btn.OpenLogFolder}" />
+                    </StackPanel>
+                </StackPanel>
+            </local:MyCard>
+
             <local:MyCard Margin="0,0,0,15" Title="{DynamicResource Xe.Netease.Right.ConfigTitle}">
                 <StackPanel Margin="21,36,21,15">
                     <TextBlock Text="{DynamicResource Xe.Netease.McDir.Label}" Margin="0,0,0,4" />

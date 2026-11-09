@@ -3993,4 +3993,51 @@
     <sys:String x:Key="Setup.Update.Xe.Disabled">PCL XE {0} 不提供自动更新，请从发布页获取新版本。</sys:String>
     <sys:String x:Key="Xe.Netease.Source.ManualUnconfirmed">手动指定（未确认是中国版）</sys:String>
     <sys:String x:Key="Xe.Netease.Candidate.Unconfirmed">未确认是中国版</sys:String>
+
+    <!-- 网易版：启动诊断与错误报告 -->
+    <sys:String x:Key="Xe.Netease.Stage.Detect">目录探测</sys:String>
+    <sys:String x:Key="Xe.Netease.Stage.Version">版本文件检查</sys:String>
+    <sys:String x:Key="Xe.Netease.Stage.Precheck">启动前检查</sys:String>
+    <sys:String x:Key="Xe.Netease.Stage.Instance">实例加载</sys:String>
+    <sys:String x:Key="Xe.Netease.Stage.Pipeline">启动管线</sys:String>
+    <sys:String x:Key="Xe.Netease.Stage.Unknown">未预期的错误</sys:String>
+    <sys:String x:Key="Xe.Netease.Check.DirMissing">.minecraft 目录不存在：{0}</sys:String>
+    <sys:String x:Key="Xe.Netease.Check.VersionMissing">版本 {0} 不在可启动列表中，可用版本：{1}</sys:String>
+    <sys:String x:Key="Xe.Netease.Check.NoJson">缺少版本 JSON：{0}</sys:String>
+    <sys:String x:Key="Xe.Netease.Check.Unreadable">无法读取版本 JSON：{0}</sys:String>
+    <sys:String x:Key="Xe.Netease.Check.BadJson">版本 JSON 解析失败：{0}</sys:String>
+    <sys:String x:Key="Xe.Netease.Check.MissingInherit">版本 JSON 声明继承自 {0}，但 versions 下没有该父版本；请先在官方启动器里下载完整的 {0}</sys:String>
+    <sys:String x:Key="Xe.Netease.Check.NoMainClass">版本 JSON 缺少 mainClass，无法确定启动入口</sys:String>
+    <sys:String x:Key="Xe.Netease.Check.DuplicateKey">版本 JSON 中重复出现了字段「{0}」，这不是合法的启动器版本文件，PCL 无法解析；请在官方启动器里重新下载/修复该版本</sys:String>
+    <sys:String x:Key="Xe.Netease.Check.UiThread">必须在 UI 线程启动</sys:String>
+    <sys:String x:Key="Xe.Netease.Launch.PipelineFailed">启动过程中出现问题</sys:String>
+    <sys:String x:Key="Xe.Netease.Launch.PipelineFailedHint">网易版启动失败，详情见「启动 → 网易版启动 → 启动诊断」，可复制错误报告或打开日志。</sys:String>
+    <sys:String x:Key="Xe.Netease.Launch.Aborted">启动已被取消</sys:String>
+    <sys:String x:Key="Xe.Netease.Profile.AutoCreated">PCL XE 自动创建</sys:String>
+    <sys:String x:Key="Xe.Netease.Report.Title">网易版启动失败</sys:String>
+    <sys:String x:Key="Xe.Netease.Report.Header">===== PCL XE 网易版启动错误报告 =====</sys:String>
+    <sys:String x:Key="Xe.Netease.Report.Time">时间</sys:String>
+    <sys:String x:Key="Xe.Netease.Report.Launcher">启动器</sys:String>
+    <sys:String x:Key="Xe.Netease.Report.System">系统</sys:String>
+    <sys:String x:Key="Xe.Netease.Report.GameDir">游戏目录</sys:String>
+    <sys:String x:Key="Xe.Netease.Report.Version">启动版本</sys:String>
+    <sys:String x:Key="Xe.Netease.Report.Stage">失败阶段</sys:String>
+    <sys:String x:Key="Xe.Netease.Report.Reason">失败原因</sys:String>
+    <sys:String x:Key="Xe.Netease.Report.NoFailure">无（启动已发起）</sys:String>
+    <sys:String x:Key="Xe.Netease.Report.Exception">异常信息</sys:String>
+    <sys:String x:Key="Xe.Netease.Report.Steps">启动步骤</sys:String>
+    <sys:String x:Key="Xe.Netease.Report.LogFile">日志文件</sys:String>
+    <sys:String x:Key="Xe.Netease.Report.LogUnavailable">日志写入失败，请查看启动器主日志</sys:String>
+    <sys:String x:Key="Xe.Netease.Btn.CopyReport">复制错误报告</sys:String>
+    <sys:String x:Key="Xe.Netease.Btn.OpenLog">打开日志</sys:String>
+    <sys:String x:Key="Xe.Netease.Btn.OpenLogFolder">打开日志文件夹</sys:String>
+    <sys:String x:Key="Xe.Netease.Diag.Title">启动诊断</sys:String>
+    <sys:String x:Key="Xe.Netease.Diag.NotTried">本次运行尚未尝试启动网易版。启动后会在这里显示结果、失败原因与日志位置。</sys:String>
+    <sys:String x:Key="Xe.Netease.Diag.Success">上次启动：已发起（{0}）</sys:String>
+    <sys:String x:Key="Xe.Netease.Diag.Failed">上次启动：失败（{0}）</sys:String>
+    <sys:String x:Key="Xe.Netease.Diag.Detail">失败阶段：{0}　原因：{1}</sys:String>
+    <sys:String x:Key="Xe.Netease.Diag.Version">启动版本：{0}</sys:String>
+    <sys:String x:Key="Xe.Netease.Diag.LogFile">日志文件：{0}</sys:String>
+    <sys:String x:Key="Xe.Netease.Diag.LogFolder">日志文件夹：{0}</sys:String>
+    <sys:String x:Key="Xe.Netease.Diag.LogUnavailable">日志文件写入失败，请查看启动器主日志。</sys:String>
 </ResourceDictionary>

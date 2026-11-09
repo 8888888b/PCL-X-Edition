@@ -3,6 +3,7 @@ using System.Text;
 using Microsoft.Win32;
 using PCL.Core.App;
 using PCL.Core.App.Localization;
+using PCL.Core.Utils;
 
 namespace PCL;
 
@@ -188,74 +189,365 @@ public static class XeNeteaseService
         }
     }
 
+    /// <summary>启动结束（含启动管线异步失败）时触发，用于刷新界面上的诊断信息。</summary>
+    public static event Action<XeNeteaseDiagnostics>? LaunchFinished;
+
+    private static XeNeteaseDiagnostics? _hookedSession;
+
     /// <summary>使用当前配置的版本启动中国版客户端。</summary>
     public static bool Launch(out string message) => Launch(null, out message);
 
     /// <summary>直接通过中国版 .minecraft 启动指定版本。</summary>
     public static bool Launch(string? version, out string message)
     {
-        var dir = ResolveMcDir();
-        if (string.IsNullOrWhiteSpace(dir))
+        var diag = XeNeteaseDiagnostics.Begin();
+        bool ok;
+        try
         {
-            message = Lang.Text("Xe.Netease.Launch.NotFound");
-            return false;
+            ok = LaunchCore(version, diag, out message);
+        }
+        catch (Exception ex)
+        {
+            diag.Fail(Lang.Text("Xe.Netease.Stage.Unknown"), ex.Message, ex);
+            message = Lang.Text("Xe.Netease.Launch.Failed", ex.Message);
+            ok = false;
         }
 
+        diag.Complete();
+        if (!ok) NotifyLaunchFinished(diag);
+        return ok;
+    }
+
+    private static bool LaunchCore(string? version, XeNeteaseDiagnostics diag, out string message)
+    {
+        message = "";
+
+        // ---- 1. 游戏目录 ----
+        var dir = ResolveMcDir();
+        diag.McDir = dir;
+        if (string.IsNullOrWhiteSpace(dir))
+        {
+            return Fail(diag, Lang.Text("Xe.Netease.Stage.Detect"), Lang.Text("Xe.Netease.Launch.NotFound"),
+                out message);
+        }
+
+        diag.Step("游戏目录：" + dir);
+        if (!Directory.Exists(dir))
+        {
+            return Fail(diag, Lang.Text("Xe.Netease.Stage.Detect"),
+                Lang.Text("Xe.Netease.Check.DirMissing", dir), out message);
+        }
+
+        // ---- 2. 版本列表 ----
         var versions = GetVersions(dir);
+        diag.Step($"versions 下的可启动版本（{versions.Count}）：" +
+                  (versions.Count == 0 ? "（空）" : string.Join(", ", versions)));
         if (versions.Count == 0)
         {
-            message = Lang.Text("Xe.Netease.Launch.NoVersion", dir);
-            return false;
+            return Fail(diag, Lang.Text("Xe.Netease.Stage.Version"),
+                Lang.Text("Xe.Netease.Launch.NoVersion", dir), out message);
         }
 
         version = string.IsNullOrWhiteSpace(version) ? GetPreferredVersion(dir) : version;
         if (string.IsNullOrWhiteSpace(version) ||
             !versions.Contains(version, StringComparer.OrdinalIgnoreCase))
         {
-            message = Lang.Text("Xe.Netease.Launch.NoVersion", dir);
-            return false;
+            return Fail(diag, Lang.Text("Xe.Netease.Stage.Version"),
+                Lang.Text("Xe.Netease.Check.VersionMissing", version ?? "", string.Join(", ", versions)),
+                out message);
         }
 
         version = versions.First(v => string.Equals(v, version, StringComparison.OrdinalIgnoreCase));
+        diag.Version = version;
+        diag.Step("启动版本：" + version);
 
+        // ---- 3. 版本文件检查（JSON、继承版本、主类）----
+        var problem = CheckVersion(dir, version);
+        if (problem is not null)
+            return Fail(diag, Lang.Text("Xe.Netease.Stage.Version"),
+                Lang.Text("Xe.Netease.Launch.BadVersion", version, problem), out message);
+        diag.Step("版本文件检查通过");
+
+        // 只做记录：库与资源缺失时启动管线会尝试补全，不必阻塞启动
+        diag.Step($"libraries 存在：{Directory.Exists(Path.Combine(dir, "libraries"))}；" +
+                  $"assets 存在：{Directory.Exists(Path.Combine(dir, "assets"))}");
+
+        if (!ModBase.RunInUi())
+        {
+            return Fail(diag, Lang.Text("Xe.Netease.Stage.Precheck"),
+                Lang.Text("Xe.Netease.Check.UiThread"), out message);
+        }
+
+        // ---- 4. 账号档案：没有档案时预检测必然失败，这里自动补一个离线档案 ----
+        EnsureProfile(diag);
+
+        // ---- 5. 注册游戏文件夹并构造实例 ----
+        RegisterFolder(dir);
+        ModFolder.mcFolderSelected = dir;
+        States.Game.SelectedFolder = dir.Replace(ModBase.exePath, "$");
+        Config.Xe.Netease.GameDir = dir;
+        Config.Xe.Netease.SelectedVersion = version;
+
+        var versionDir = Path.Combine(dir, "versions", version) + @"\";
+        // 中国版的库与资源都在 .minecraft 根目录下，必须关闭版本隔离才能让 PCL 找对路径
+        Config.Instance.IndieV2[versionDir] = false;
+        diag.Step("已注册游戏文件夹，并关闭版本隔离：" + versionDir);
+
+        var instance = new McInstance(versionDir);
+        instance.Load();
+        diag.Step($"实例状态：{instance.state}；说明：{instance.Desc}；" +
+                  $"版本识别：{instance.Info.VanillaName}；实例目录：{instance.PathInstance}");
+        if (instance.state == McInstanceState.Error)
+        {
+            return Fail(diag, Lang.Text("Xe.Netease.Stage.Instance"),
+                Lang.Text("Xe.Netease.Launch.BadVersion", version, instance.Desc), out message);
+        }
+
+        // ---- 6. 交给启动管线 ----
+        var started = ModLaunch.McLaunchStart(new ModLaunch.McLaunchOptions { instance = instance });
+        if (!started)
+        {
+            return Fail(diag, Lang.Text("Xe.Netease.Stage.Pipeline"),
+                Lang.Text("Xe.Netease.Launch.NotStarted"), out message);
+        }
+
+        HookPipelineResult(diag);
+        diag.Succeed(version);
+        message = Lang.Text("Xe.Netease.Launch.Success", version);
+        return true;
+    }
+
+    private static bool Fail(XeNeteaseDiagnostics diag, string stage, string message, out string result)
+    {
+        diag.Fail(stage, message);
+        result = message;
+        return false;
+    }
+
+    /// <summary>启动前的版本可用性检查，返回 null 表示可以尝试启动。</summary>
+    public static string? CheckVersion(string dir, string version)
+    {
+        var versionDir = Path.Combine(dir, "versions", version);
+        var jsonPath = Path.Combine(versionDir, version + ".json");
+        if (!File.Exists(jsonPath)) return Lang.Text("Xe.Netease.Check.NoJson", jsonPath);
+
+        string raw;
         try
         {
-            if (!ModBase.RunInUi())
-            {
-                message = Lang.Text("Xe.Netease.Launch.Failed", "必须在 UI 线程启动");
-                return false;
-            }
-
-            RegisterFolder(dir);
-            ModFolder.mcFolderSelected = dir;
-            States.Game.SelectedFolder = dir.Replace(ModBase.exePath, "$");
-            Config.Xe.Netease.GameDir = dir;
-            Config.Xe.Netease.SelectedVersion = version;
-
-            var versionDir = Path.Combine(dir, "versions", version) + @"\";
-            // 中国版的库与资源都在 .minecraft 根目录下，必须关闭版本隔离才能让 PCL 找对路径
-            Config.Instance.IndieV2[versionDir] = false;
-
-            var instance = new McInstance(versionDir);
-            instance.Load();
-            if (instance.state == McInstanceState.Error)
-            {
-                message = Lang.Text("Xe.Netease.Launch.BadVersion", version, instance.Desc);
-                return false;
-            }
-
-            var started = ModLaunch.McLaunchStart(new ModLaunch.McLaunchOptions { instance = instance });
-            message = started
-                ? Lang.Text("Xe.Netease.Launch.Success", version)
-                : Lang.Text("Xe.Netease.Launch.Failed", Lang.Text("Xe.Netease.Launch.NotStarted"));
-            if (started) ModBase.Log($"[XE] 已通过 .minecraft 启动网易版：{versionDir}");
-            return started;
+            raw = ModBase.ReadFile(jsonPath);
         }
         catch (Exception ex)
         {
-            ModBase.Log(ex, "通过 .minecraft 启动网易版失败", ModBase.LogLevel.Normal);
-            message = Lang.Text("Xe.Netease.Launch.Failed", ex.Message);
-            return false;
+            return Lang.Text("Xe.Netease.Check.Unreadable", ex.Message);
+        }
+
+        try
+        {
+            using var document = JsonDocument.Parse(raw, JsonCompat.DocumentOptions);
+            var root = document.RootElement;
+            if (root.ValueKind != JsonValueKind.Object)
+                return Lang.Text("Xe.Netease.Check.BadJson", "根节点不是 JSON 对象");
+
+            // PCL 用 JsonObject 解析版本 JSON，重复字段会直接抛异常，这里提前给出可读的提示
+            var duplicates = new List<string>();
+            var seen = new HashSet<string>(StringComparer.Ordinal);
+            foreach (var property in root.EnumerateObject())
+                if (!seen.Add(property.Name) && !duplicates.Contains(property.Name))
+                    duplicates.Add(property.Name);
+            if (duplicates.Count > 0)
+                return Lang.Text("Xe.Netease.Check.DuplicateKey", string.Join("、", duplicates));
+
+            if (root.TryGetProperty("inheritsFrom", out var inheritElement))
+            {
+                var inherit = inheritElement.GetString();
+                if (!string.IsNullOrWhiteSpace(inherit))
+                {
+                    var parentJson = Path.Combine(dir, "versions", inherit, inherit + ".json");
+                    if (!File.Exists(parentJson))
+                        return Lang.Text("Xe.Netease.Check.MissingInherit", inherit);
+                }
+            }
+
+            if (!root.TryGetProperty("mainClass", out var mainClassElement) ||
+                string.IsNullOrWhiteSpace(mainClassElement.GetString()))
+            {
+                return Lang.Text("Xe.Netease.Check.NoMainClass");
+            }
+
+            return null;
+        }
+        catch (JsonException ex)
+        {
+            return Lang.Text("Xe.Netease.Check.BadJson", ex.Message);
+        }
+        catch (Exception ex)
+        {
+            return Lang.Text("Xe.Netease.Check.BadJson", ex.Message);
+        }
+    }
+
+    /// <summary>确保存在可用账号档案；PCL 没有档案时无法启动。</summary>
+    private static void EnsureProfile(XeNeteaseDiagnostics diag)
+    {
+        try
+        {
+            if (ModProfile.profileList.Count == 0) ModProfile.GetProfile();
+        }
+        catch (Exception ex)
+        {
+            ModBase.Log(ex, "读取账号档案失败", ModBase.LogLevel.Debug);
+        }
+
+        if (ModProfile.selectedProfile is not null)
+        {
+            diag.Step("账号档案：" + DescribeProfile(ModProfile.selectedProfile));
+            return;
+        }
+
+        if (ModProfile.profileList.Count > 0)
+        {
+            var index = Math.Clamp(ModProfile.lastUsedProfile, 0, ModProfile.profileList.Count - 1);
+            ModProfile.selectedProfile = ModProfile.profileList[index];
+            diag.Step("未选中账号，自动选择档案：" + DescribeProfile(ModProfile.selectedProfile));
+            return;
+        }
+
+        var name = NormalizePlayerName(Config.Xe.Netease.OfflineName);
+        var profile = new ModProfile.McProfile
+        {
+            Type = ModLaunch.McLoginType.Legacy,
+            Username = name,
+            Uuid = ModProfile.GetOfflineUuid(name),
+            Desc = Lang.Text("Xe.Netease.Profile.AutoCreated")
+        };
+        ModProfile.profileList.Add(profile);
+        ModProfile.lastUsedProfile = ModProfile.profileList.Count - 1;
+        ModProfile.selectedProfile = profile;
+        ModProfile.SaveProfile();
+
+        diag.Step($"没有任何账号档案，已自动创建离线档案：{name}（{profile.Uuid}），" +
+                  "可在启动页的账号管理中修改用户名");
+    }
+
+    private static string DescribeProfile(ModProfile.McProfile profile)
+    {
+        var type = profile.Type switch
+        {
+            ModLaunch.McLoginType.Ms => Lang.Text("Launch.Account.Type.Microsoft"),
+            ModLaunch.McLoginType.Auth => Lang.Text("Launch.Account.Type.ThirdParty"),
+            _ => Lang.Text("Launch.Account.Type.Offline")
+        };
+        return $"{profile.Username}（{type}，{profile.Uuid}）";
+    }
+
+    private static string NormalizePlayerName(string? name)
+    {
+        var value = (name ?? "").Trim().Trim('"');
+        if (value.Length is 0 or > 16) value = "Player";
+        return value;
+    }
+
+    /// <summary>监听启动管线的异步结果，失败时把异常写进诊断日志。</summary>
+    private static void HookPipelineResult(XeNeteaseDiagnostics diag)
+    {
+        if (ReferenceEquals(_hookedSession, diag)) return;
+        if (_hookedSession is not null)
+            ModLaunch.mcLaunchLoader.OnStateChangedUi -= OnPipelineStateChanged;
+        _hookedSession = diag;
+        ModLaunch.mcLaunchLoader.OnStateChangedUi += OnPipelineStateChanged;
+    }
+
+    private static void OnPipelineStateChanged(ModLoader.LoaderBase loader, ModBase.LoadState newState,
+        ModBase.LoadState oldState)
+    {
+        if (newState is not (ModBase.LoadState.Failed or ModBase.LoadState.Aborted or ModBase.LoadState.Finished))
+            return;
+
+        ModLaunch.mcLaunchLoader.OnStateChangedUi -= OnPipelineStateChanged;
+        var diag = _hookedSession;
+        _hookedSession = null;
+        if (diag is null) return;
+
+        switch (newState)
+        {
+            case ModBase.LoadState.Failed:
+                diag.Fail(Lang.Text("Xe.Netease.Stage.Pipeline"),
+                    loader.Error?.Message ?? Lang.Text("Xe.Netease.Launch.PipelineFailed"), loader.Error);
+                break;
+            case ModBase.LoadState.Aborted:
+                diag.Fail(Lang.Text("Xe.Netease.Stage.Pipeline"), Lang.Text("Xe.Netease.Launch.Aborted"));
+                break;
+            default:
+                diag.Step("启动管线已结束（游戏进程已启动或已退出）");
+                break;
+        }
+
+        diag.Complete();
+        NotifyLaunchFinished(diag);
+        if (!diag.IsFailed) return;
+
+        HintService.Hint(Lang.Text("Xe.Netease.Launch.PipelineFailedHint"), HintType.Error);
+    }
+
+    private static void NotifyLaunchFinished(XeNeteaseDiagnostics diag)
+    {
+        try
+        {
+            LaunchFinished?.Invoke(diag);
+        }
+        catch (Exception ex)
+        {
+            ModBase.Log(ex, "刷新网易版启动诊断信息失败", ModBase.LogLevel.Debug);
+        }
+    }
+
+    /// <summary>弹出错误报告对话框，可复制报告或打开日志目录。</summary>
+    public static void ShowFailureReport(XeNeteaseDiagnostics? diag = null)
+    {
+        diag ??= XeNeteaseDiagnostics.Current;
+        if (diag is null || !diag.IsFailed) return;
+
+        var report = diag.BuildReport();
+        var logDir = XeNeteaseDiagnostics.LogDirectory;
+        ModMain.MyMsgBox(report, Lang.Text("Xe.Netease.Report.Title"),
+            Lang.Text("Xe.Netease.Btn.CopyReport"), Lang.Text("Xe.Netease.Btn.OpenLogFolder"), "",
+            isWarn: true,
+            button1Action: () => ModBase.ClipboardSet(report),
+            button2Action: () => OpenLogFolder(logDir));
+    }
+
+    /// <summary>打开网易版诊断日志目录。</summary>
+    public static void OpenLogFolder(string? path = null)
+    {
+        var dir = path ?? XeNeteaseDiagnostics.LogDirectory;
+        try
+        {
+            if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
+            ModBase.OpenExplorer(dir);
+        }
+        catch (Exception ex)
+        {
+            HintService.Hint(ex.Message, HintType.Error);
+        }
+    }
+
+    /// <summary>打开最近一次的启动日志文件。</summary>
+    public static void OpenLastLog()
+    {
+        var path = XeNeteaseDiagnostics.Current?.LogPath;
+        if (string.IsNullOrWhiteSpace(path) || !File.Exists(path))
+        {
+            OpenLogFolder();
+            return;
+        }
+
+        try
+        {
+            ModBase.OpenExplorer(path);
+        }
+        catch (Exception ex)
+        {
+            HintService.Hint(ex.Message, HintType.Error);
         }
     }
 
