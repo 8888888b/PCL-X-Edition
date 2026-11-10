@@ -9,6 +9,7 @@ public partial class PageXeAskAiLeft
     public PageXeAskAiLeft()
     {
         InitializeComponent();
+        AnimatedControl = PanSide;
         Loaded += (_, _) => Refresh();
         BtnExample1.Click += (_, _) => ModMain.frmXeAskAiRight?.Submit(Lang.Text("Xe.Ai.Example1"));
         BtnExample2.Click += (_, _) => ModMain.frmXeAskAiRight?.Submit(Lang.Text("Xe.Ai.Example2"));

@@ -19,6 +19,7 @@ public partial class PageXeAskAiRight
     public PageXeAskAiRight()
     {
         InitializeComponent();
+        PanScroll = PanBack;
         Loaded += (_, _) =>
         {
             LoadConfig();

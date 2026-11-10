@@ -12,9 +12,15 @@ public partial class PageSetupUpdate
 {
     public VersionDataModel updateInfo;
 
+    private bool _xeBusy;
+
     public PageSetupUpdate()
     {
         InitializeComponent();
+        BtnXeCheck.Click += (_, _) => _ = CheckXeAsync();
+        BtnXeInstall.Click += (_, _) => _ = InstallXeAsync();
+        BtnXeSaveSource.Click += (_, _) => SaveXeSource();
+        CheckXeAutoCheck.Change += (_, _) => Config.Xe.Update.AutoCheck = CheckXeAutoCheck.Checked == true;
         Loaded += (_, _) => Init();
     }
 
@@ -28,18 +34,140 @@ public partial class PageSetupUpdate
 
         TextCurrentVersion.Text = "PCL XE " + VersionNameFormat(ModBase.versionBaseName);
         ModAnimation.AniEndControl();
-        // PCL XE 使用自己的版本号，上游 PCL Symbio Edition 的更新源不适用：
-        // 检查只会得到上游版本，安装后会覆盖 XE，因此这里直接停用自动更新。
-        ShowSelfUpdateDisabled();
+
+        // 上游 PCL Symbio Edition 的更新源与 XE 的版本号体系互不相干，安装上游包会覆盖 XE，
+        // 因此整块上游更新 UI 都隐藏，只保留 PCL XE 自己的更新卡片。
+        CardUpstreamOption.Visibility = Visibility.Collapsed;
+        CardUpdate.Visibility = Visibility.Collapsed;
+        CardCheck.Visibility = Visibility.Collapsed;
+        CardOtherOption.Visibility = Visibility.Collapsed;
+
+        TextXeVersion.Text = "PCL XE " + VersionNameFormat(ModBase.versionBaseName);
+        TextXeSource.Text = Config.Xe.Update.ManifestUrl;
+        CheckXeAutoCheck.SetChecked(Config.Xe.Update.AutoCheck, false);
+        SetXeStatus(XeUpdateService.IsConfigured
+            ? Lang.Text("Setup.Update.Xe.Idle")
+            : Lang.Text("Setup.Update.Xe.NoSource"), false);
+
+        // 启动时已自动检查过就直接展示结果，避免每次进页面都发请求
+        if (XeUpdateService.Latest is { } latest)
+            ShowXeAvailable(latest);
+        else if (XeUpdateService.IsConfigured)
+            _ = CheckXeAsync(true);
     }
 
-    private void ShowSelfUpdateDisabled()
+    #region PCL XE 自动更新
+
+    private void SetXeStatus(string text, bool progress)
     {
-        CardUpdate.Visibility = Visibility.Collapsed;
-        CardCheck.Visibility = Visibility.Visible;
-        TextCurrentDesc.Text = Lang.Text("Setup.Update.Xe.Disabled", ModBase.versionBaseName);
-        BtnCheckAgain.IsEnabled = false;
+        TextXeStatus.Text = text;
+        PanXeProgress.Visibility = progress ? Visibility.Visible : Visibility.Collapsed;
+        if (!progress) BarXeProgress.Width = 0;
     }
+
+    private void SaveXeSource()
+    {
+        Config.Xe.Update.ManifestUrl = TextXeSource.Text.Trim();
+        XeUpdateService.Reset();
+        BtnXeInstall.Visibility = Visibility.Collapsed;
+        TextXeNotes.Visibility = Visibility.Collapsed;
+        SetXeStatus(XeUpdateService.IsConfigured
+            ? Lang.Text("Setup.Update.Xe.Idle")
+            : Lang.Text("Setup.Update.Xe.NoSource"), false);
+        HintService.Hint(Lang.Text("Setup.Update.Xe.SourceSaved"), HintType.Success);
+    }
+
+    private async Task CheckXeAsync(bool silent = false)
+    {
+        if (_xeBusy) return;
+        if (!XeUpdateService.IsConfigured)
+        {
+            SetXeStatus(Lang.Text("Setup.Update.Xe.NoSource"), false);
+            return;
+        }
+
+        _xeBusy = true;
+        BtnXeCheck.IsEnabled = false;
+        BtnXeInstall.Visibility = Visibility.Collapsed;
+        TextXeNotes.Visibility = Visibility.Collapsed;
+        SetXeStatus(Lang.Text("Setup.Update.Xe.Checking"), true);
+        try
+        {
+            var info = await XeUpdateService.CheckAsync();
+            if (info is null)
+            {
+                SetXeStatus(Lang.Text("Setup.Update.Xe.NoSource"), false);
+                return;
+            }
+
+            if (XeUpdateService.IsNewer(info))
+                ShowXeAvailable(info);
+            else
+                SetXeStatus(Lang.Text("Setup.Update.Xe.Latest", ModBase.versionBaseName), false);
+        }
+        catch (Exception ex)
+        {
+            var message = Lang.Text("Setup.Update.Xe.Error", ex.Message);
+            SetXeStatus(message, false);
+            if (!silent) HintService.Hint(message, HintType.Warning);
+            ModBase.Log(ex, "[XE] 检查更新失败", ModBase.LogLevel.Debug);
+        }
+        finally
+        {
+            _xeBusy = false;
+            BtnXeCheck.IsEnabled = true;
+        }
+    }
+
+    private void ShowXeAvailable(XeUpdateService.UpdateInfo info)
+    {
+        SetXeStatus(Lang.Text("Setup.Update.Xe.Available", info.Version, ModBase.versionBaseName), false);
+        BtnXeInstall.Visibility = Visibility.Visible;
+        if (string.IsNullOrWhiteSpace(info.Notes))
+        {
+            TextXeNotes.Visibility = Visibility.Collapsed;
+            return;
+        }
+
+        var notes = info.Notes.Trim();
+        TextXeNotes.Text = notes.Length > 800 ? notes[..800] + "…" : notes;
+        TextXeNotes.Visibility = Visibility.Visible;
+    }
+
+    private async Task InstallXeAsync()
+    {
+        var info = XeUpdateService.Latest;
+        if (info is null || _xeBusy) return;
+
+        _xeBusy = true;
+        BtnXeCheck.IsEnabled = false;
+        BtnXeInstall.IsEnabled = false;
+        var progress = new Progress<double>(value =>
+        {
+            BarXeProgress.Width = Math.Max(0d, PanXeProgress.ActualWidth * value);
+            TextXeStatus.Text = Lang.Text("Setup.Update.Xe.Downloading", Lang.Number(value * 100d, "P0"));
+        });
+        SetXeStatus(Lang.Text("Setup.Update.Xe.Downloading", "0%"), true);
+        try
+        {
+            var file = await XeUpdateService.DownloadAsync(info, progress);
+            SetXeStatus(Lang.Text("Setup.Update.Xe.Verifying"), true);
+            SetXeStatus(Lang.Text("Setup.Update.Xe.Ready"), false);
+            XeUpdateService.InstallAndRestart(file);
+        }
+        catch (Exception ex)
+        {
+            var message = Lang.Text("Setup.Update.Xe.DownloadFailed", ex.Message);
+            SetXeStatus(message, false);
+            HintService.Hint(message, HintType.Warning);
+            ModBase.Log(ex, "[XE] 下载更新失败", ModBase.LogLevel.Debug);
+            BtnXeInstall.IsEnabled = true;
+            BtnXeCheck.IsEnabled = true;
+            _xeBusy = false;
+        }
+    }
+
+    #endregion
 
     private async Task<UpdateStatus> IsLatestAsync()
     {
@@ -72,100 +200,10 @@ public partial class PageSetupUpdate
         }
     }
 
-    /// <summary>PCL XE 的版本号独立于上游，不提供自动更新。</summary>
-    private static readonly bool SelfUpdateDisabled = true;
-
-    public async void CheckUpdate()
+    /// <summary>供启动页等入口调用：改为检查 PCL XE 自己的更新源。</summary>
+    public void CheckUpdate()
     {
-        if (SelfUpdateDisabled)
-        {
-            ShowSelfUpdateDisabled();
-            return;
-        }
-
-        ModBase.Log("[Update] 开始检查更新");
-        CardUpdate.Visibility = Visibility.Collapsed;
-        CardCheck.Visibility = Visibility.Visible;
-        TextCurrentDesc.Text = Lang.Text("Setup.Update.Checking");
-        BtnCheckAgain.IsEnabled = false;
-        switch (await IsLatestAsync())
-        {
-            case UpdateStatus.Available:
-            {
-                Exception checkUpdateEx = null;
-                try
-                {
-                    updateInfo = UpdateManager.remoteServer.GetLatestVersion(
-                        UpdateManager.IsCurrentVersionBeta
-                            ? UpdateChannel.beta
-                            : UpdateChannel.stable, SystemInfo.IsArm64System ? UpdateArch.arm64 : UpdateArch.x64);
-                    TextUpdateName.Text = "PCL XE " + VersionNameFormat(updateInfo.VersionName);
-                    var summary = updateInfo.Changelog.Between("<summary>", "</summary>");
-                    if (!updateInfo.Changelog.Contains("<summary>") || string.IsNullOrWhiteSpace(summary.Trim()))
-                        TextChangelog.Text = Lang.Text("Setup.Update.Changelog.Empty");
-                    else
-                        TextChangelog.Text = summary;
-                }
-                catch (Exception ex)
-                {
-                    checkUpdateEx = ex;
-                }
-
-                BtnCheckAgain.IsEnabled = true;
-                if (updateInfo is null)
-                {
-                    TextCurrentDesc.Text = Lang.Text("Setup.Update.CheckFailed");
-                    if (checkUpdateEx is not null)
-                        ModBase.Log(
-                            checkUpdateEx,
-                            "[Update] 检查更新失败",
-                            ModBase.LogLevel.Msgbox,
-                            userSummary: Lang.Text("Update.Check.Failed"));
-                    else
-                        ModBase.Log(
-                            "[Update] 检查更新失败",
-                            ModBase.LogLevel.Msgbox,
-                            userSummary: Lang.Text("Update.Check.Failed"));
-                    return;
-                }
-
-                if (UpdateManager.updateLoader is not null && UpdateManager.updateLoader.State == ModBase.LoadState.Loading)
-                {
-                    BtnUpdate_Timer();
-                    BtnUpdate.IsEnabled = false;
-                }
-                else if (UpdateManager.isUpdateWaitingRestart)
-                {
-                    BtnUpdate.Text = Lang.Text("Setup.Update.RestartInstall");
-                    BtnUpdate.IsEnabled = true;
-                }
-                else
-                {
-                    BtnUpdate.Text = Lang.Text("Setup.Update.Install");
-                    BtnUpdate.IsEnabled = true;
-                }
-
-                CardUpdate.Visibility = Visibility.Visible;
-                CardCheck.Visibility = Visibility.Collapsed;
-                break;
-            }
-            case UpdateStatus.Latest:
-            {
-                CardUpdate.Visibility = Visibility.Collapsed;
-                CardCheck.Visibility = Visibility.Visible;
-                BtnCheckAgain.IsEnabled = true;
-                TextCurrentDesc.Text = Lang.Text("Setup.Update.Latest");
-                break;
-            }
-            case UpdateStatus.Error:
-            {
-                CardUpdate.Visibility = Visibility.Collapsed;
-                CardCheck.Visibility = Visibility.Visible;
-                BtnCheckAgain.IsEnabled = true;
-                TextCurrentDesc.Text = Lang.Text("Setup.Update.CheckFailed");
-                break;
-            }
-        }
+        _ = CheckXeAsync();
     }
 
     private async void BtnUpdate_Timer()

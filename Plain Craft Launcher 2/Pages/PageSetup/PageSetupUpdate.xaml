@@ -7,7 +7,57 @@
     PanScroll="{Binding ElementName=PanBack}">
     <local:MyScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" x:Name="PanBack">
         <StackPanel x:Name="PanMain" Margin="25,25,25,10">
-            <local:MyCard Height="Auto">
+            <local:MyCard x:Name="CardXeUpdate" Title="{DynamicResource Setup.Update.Xe.Title}">
+                <StackPanel Margin="21,36,21,16">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel>
+                            <TextBlock x:Name="TextXeVersion" FontSize="18" FontWeight="Bold" />
+                            <TextBlock x:Name="TextXeStatus" Margin="0,6,16,0" TextWrapping="Wrap" FontSize="13"
+                                       Foreground="{DynamicResource ColorBrushGray5}" />
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                            <local:MyButton x:Name="BtnXeCheck" Height="32" MinWidth="110" Padding="12,0"
+                                            Text="{DynamicResource Setup.Update.Xe.Check}" />
+                            <local:MyButton x:Name="BtnXeInstall" Height="32" MinWidth="110" Padding="12,0" Margin="8,0,0,0"
+                                            ColorType="Highlight" Visibility="Collapsed"
+                                            Text="{DynamicResource Setup.Update.Xe.Install}" />
+                        </StackPanel>
+                    </Grid>
+
+                    <Grid x:Name="PanXeProgress" Height="6" Margin="0,12,0,0" Visibility="Collapsed">
+                        <Border Background="{DynamicResource ColorBrush7}" CornerRadius="3" />
+                        <Border x:Name="BarXeProgress" HorizontalAlignment="Left" Width="0"
+                                Background="{DynamicResource ColorBrush3}" CornerRadius="3" />
+                    </Grid>
+
+                    <TextBlock x:Name="TextXeNotes" Margin="0,10,0,0" TextWrapping="Wrap" FontSize="12"
+                               Foreground="{DynamicResource ColorBrushGray5}" Visibility="Collapsed" />
+
+                    <Grid Margin="0,14,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="1*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="{DynamicResource Setup.Update.Xe.Source}" VerticalAlignment="Center"
+                                   Margin="0,0,10,0" />
+                        <local:MyTextBox x:Name="TextXeSource" Grid.Column="1" Height="30" />
+                        <local:MyButton x:Name="BtnXeSaveSource" Grid.Column="2" Height="30" MinWidth="80" Margin="8,0,0,0"
+                                        Text="{DynamicResource Setup.Update.Xe.SaveSource}" />
+                    </Grid>
+
+                    <local:MyCheckBox x:Name="CheckXeAutoCheck" Height="26" Margin="0,10,0,0"
+                                      Text="{DynamicResource Setup.Update.Xe.AutoCheck}" />
+
+                    <local:MyHint Theme="Blue" Margin="0,10,0,0" Text="{DynamicResource Setup.Update.Xe.SourceHint}" />
+                </StackPanel>
+            </local:MyCard>
+
+            <local:MyCard x:Name="CardUpstreamOption" Height="Auto">
                 <StackPanel Margin="20,15,20,15">
                     <Grid>
                         <Grid.ColumnDefinitions>

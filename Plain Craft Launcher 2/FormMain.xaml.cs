@@ -218,6 +218,40 @@ public partial class FormMain
         // Timer 启动
         ModAnimation.AniStart();
         ModMain.TimerMainStart();
+        // 预热网易版扫描：首次切到「网易版」页面时直接用缓存，不再在 UI 线程扫盘
+        ModBase.RunInNewThread(() =>
+        {
+            try
+            {
+                Thread.Sleep(1500);
+                XeNeteaseService.Capture(Config.Xe.Netease.GameDir);
+            }
+            catch (Exception ex)
+            {
+                ModBase.Log(ex, "[XE] 预热网易版扫描失败", ModBase.LogLevel.Debug);
+            }
+        });
+        // 启动后在后台检查 PCL XE 更新（可在「设置 → 关于与更新」中关闭）
+        ModBase.RunInNewThread(() =>
+        {
+            try
+            {
+                Thread.Sleep(4000);
+                if (!Config.Xe.Update.AutoCheck || !XeUpdateService.IsConfigured) return;
+                // 6 小时内检查过就不再打扰
+                if (DateTime.TryParse(Config.Xe.Update.LastCheck, out var lastCheck) &&
+                    DateTime.Now - lastCheck < TimeSpan.FromHours(6)) return;
+                var info = XeUpdateService.CheckAsync().GetAwaiter().GetResult();
+                if (info is null || !XeUpdateService.IsNewer(info)) return;
+                ModBase.Log($"[XE] 发现新版本 {info.Version}（当前 {XeUpdateService.CurrentVersion}）");
+                ModBase.RunInUi(() => HintService.Hint(
+                    Lang.Text("Setup.Update.Xe.NewFoundHint", info.Version), HintType.Info));
+            }
+            catch (Exception ex)
+            {
+                ModBase.Log(ex, "[XE] 自动检查更新失败", ModBase.LogLevel.Debug);
+            }
+        });
         // 特殊版本提示
         ModBase.RunInNewThread(() =>
         {

@@ -1,10 +1,10 @@
 {
   "name": "Plain Craft Launcher XE",
   "version": {
-    "base": "2.14.01",
+    "base": "2.14.02",
     "upstream": "2.17.14",
     "suffix": "",
-    "code": 21401
+    "code": 21402
   },
   "licenses": [
     {

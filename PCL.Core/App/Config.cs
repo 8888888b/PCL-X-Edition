@@ -672,5 +672,21 @@ public static partial class Config
             [ConfigItem<string>("XeModsSelectedInstance", "", ConfigSource.Local)]
             public partial string SelectedInstance { get; set; }
         }
+
+        /// <summary>自动更新配置。</summary>
+        [ConfigGroup("Update")] partial class UpdateConfigGroup
+        {
+            /// <summary>更新清单地址：自建 JSON，或 GitHub Releases API 的 latest 接口。</summary>
+            [ConfigItem<string>("XeUpdateManifestUrl", "", ConfigSource.Local)]
+            public partial string ManifestUrl { get; set; }
+
+            /// <summary>启动后在后台自动检查更新。</summary>
+            [ConfigItem<bool>("XeUpdateAutoCheck", true, ConfigSource.Local)]
+            public partial bool AutoCheck { get; set; }
+
+            /// <summary>上次检查时间（仅用于展示）。</summary>
+            [ConfigItem<string>("XeUpdateLastCheck", "", ConfigSource.Local)]
+            public partial string LastCheck { get; set; }
+        }
     }
 }

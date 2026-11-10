@@ -23,6 +23,70 @@ public static class XeNeteaseService
 {
     public sealed record Candidate(string Name, string Path, string Source, bool Confirmed = true);
 
+    /// <summary>一次页面刷新所需的全部数据，全部在后台线程算好后一次性送到 UI。</summary>
+    public sealed record Snapshot(
+        List<Candidate> Candidates,
+        string? ConfiguredDir,
+        bool ConfiguredExists,
+        bool ConfiguredIsChina,
+        string? ActiveDir,
+        List<string> Versions,
+        string? PreferredVersion);
+
+    private static readonly object SnapshotLock = new();
+    private static readonly TimeSpan SnapshotLife = TimeSpan.FromSeconds(20);
+    private static List<Candidate>? _detectCache;
+    private static DateTime _detectCacheAt;
+    private static Snapshot? _snapshot;
+    private static DateTime _snapshotAt;
+
+    /// <summary>在后台线程计算页面数据；结果有缓存，避免重复扫盘卡住页面切换动画。</summary>
+    public static Task<Snapshot> CaptureAsync(string? dir, bool force = false) =>
+        Task.Run(() => Capture(dir, force));
+
+    /// <summary>只读取已有缓存，供页面进入时先填充 UI（不会访问磁盘）。</summary>
+    public static Snapshot? PeekCache(string? dir)
+    {
+        lock (SnapshotLock)
+        {
+            if (_snapshot is null) return null;
+            if (DateTime.UtcNow - _snapshotAt >= SnapshotLife) return null;
+            var key = NormalizeDir(dir);
+            return string.Equals(_snapshot.ConfiguredDir, key, StringComparison.OrdinalIgnoreCase)
+                ? _snapshot
+                : null;
+        }
+    }
+
+    /// <summary>同步计算页面数据。可能读注册表与磁盘，禁止在 UI 线程直接调用。</summary>
+    public static Snapshot Capture(string? dir, bool force = false)
+    {
+        lock (SnapshotLock)
+            if (!force && _snapshot is not null &&
+                DateTime.UtcNow - _snapshotAt < SnapshotLife &&
+                string.Equals(_snapshot.ConfiguredDir, NormalizeDir(dir), StringComparison.OrdinalIgnoreCase))
+                return _snapshot;
+
+        var candidates = Detect(force);
+        var configured = NormalizeDir(dir);
+        var exists = configured is not null && Directory.Exists(configured);
+        var isChina = exists && IsChinaEditionDir(configured);
+        var active = exists && LooksLikeMcDir(configured)
+            ? configured
+            : candidates.FirstOrDefault(c => c.Confirmed)?.Path;
+        var versions = GetVersions(active);
+        var preferred = GetPreferredVersion(active);
+
+        var snapshot = new Snapshot(candidates, configured, exists, isChina, active, versions, preferred);
+        lock (SnapshotLock)
+        {
+            _snapshot = snapshot;
+            _snapshotAt = DateTime.UtcNow;
+        }
+
+        return snapshot;
+    }
+
     /// <summary>路径中出现的中国版特征（小写比较）。</summary>
     private static readonly string[] PathMarks =
         ["mcldownload", "netease", "我的世界", "mcchina", "minecraftchina", "minecraft-china"];
@@ -45,7 +109,35 @@ public static class XeNeteaseService
     }
 
     /// <summary>扫描本机可能存在的中国版 .minecraft 目录（自动结果一律经过中国版特征校验）。</summary>
-    public static List<Candidate> Detect()
+    /// <remarks>结果会被缓存，避免每次进入页面都重新扫注册表与磁盘；force 为 true 时强制重扫。</remarks>
+    public static List<Candidate> Detect(bool force = false)
+    {
+        lock (SnapshotLock)
+            if (!force && _detectCache is not null &&
+                DateTime.UtcNow - _detectCacheAt < SnapshotLife)
+                return new List<Candidate>(_detectCache);
+
+        var result = DetectCore();
+        lock (SnapshotLock)
+        {
+            _detectCache = new List<Candidate>(result);
+            _detectCacheAt = DateTime.UtcNow;
+        }
+
+        return result;
+    }
+
+    /// <summary>丢弃缓存，下次 Detect 或 Capture 会重新扫描。</summary>
+    public static void InvalidateDetect()
+    {
+        lock (SnapshotLock)
+        {
+            _detectCache = null;
+            _snapshot = null;
+        }
+    }
+
+    private static List<Candidate> DetectCore()
     {
         var result = new List<Candidate>();
         var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);

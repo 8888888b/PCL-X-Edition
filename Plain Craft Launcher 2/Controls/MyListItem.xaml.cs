@@ -85,17 +85,15 @@ public partial class MyListItem : IMyRadio
                     ModAnimation.AaOpacity(RectBack, 1d - RectBack.Opacity, time,
                         ease: new ModAnimation.AniEaseOutFluent())
                 });
-                if (IsScaleAnimationEnabled)
+                if (IsScaleAnimationEnabled && RectBack.RenderTransform is ScaleTransform backScale &&
+                    RenderTransform is ScaleTransform itemScale)
                 {
-                    ani.Add(ModAnimation.AaScaleTransform(RectBack,
-                        1d - ((ScaleTransform)RectBack.RenderTransform).ScaleX, (int)Math.Round(time * 1.6d),
+                    ani.Add(ModAnimation.AaScaleTransform(RectBack, 1d - backScale.ScaleX,
+                        (int)Math.Round(time * 1.6d), ease: new ModAnimation.AniEaseOutFluent()));
+                    ani.Add(ModAnimation.AaScaleTransform(this,
+                        (isMouseDown ? 0.98d : 1d) - itemScale.ScaleX,
+                        (int)Math.Round(time * (isMouseDown ? 0.9d : 1.2d)),
                         ease: new ModAnimation.AniEaseOutFluent()));
-                    if (isMouseDown)
-                        ani.Add(ModAnimation.AaScaleTransform(this, 0.98d - ((ScaleTransform)RenderTransform).ScaleX,
-                            (int)Math.Round(time * 0.9d), ease: new ModAnimation.AniEaseOutFluent()));
-                    else
-                        ani.Add(ModAnimation.AaScaleTransform(this, 1d - ((ScaleTransform)RenderTransform).ScaleX,
-                            (int)Math.Round(time * 1.2d), ease: new ModAnimation.AniEaseOutFluent()));
                 }
             }
             else
@@ -110,15 +108,16 @@ public partial class MyListItem : IMyRadio
                 }
 
                 ani.Add(ModAnimation.AaOpacity(RectBack, -RectBack.Opacity, time));
-                if (IsScaleAnimationEnabled)
+                if (IsScaleAnimationEnabled && RectBack.RenderTransform is ScaleTransform backScaleIdle &&
+                    RenderTransform is ScaleTransform itemScaleIdle)
                     ani.AddRange(new[]
                     {
                         ModAnimation.AaColor(RectBack, Border.BackgroundProperty,
                             isMouseDown ? "ColorBrush6" : "ColorBrush7", time),
-                        ModAnimation.AaScaleTransform(this, 1d - ((ScaleTransform)RenderTransform).ScaleX, time * 3,
+                        ModAnimation.AaScaleTransform(this, 1d - itemScaleIdle.ScaleX, time * 3,
                             ease: new ModAnimation.AniEaseOutFluent()),
                         ModAnimation.AaScaleTransform(RectBack,
-                            0.996d - ((ScaleTransform)RectBack.RenderTransform).ScaleX, time,
+                            0.996d - backScaleIdle.ScaleX, time,
                             ease: new ModAnimation.AniEaseOutFluent()),
                         ModAnimation.AaScaleTransform(RectBack, -0.246d, 1, after: true)
                     });

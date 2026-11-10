@@ -3,6 +3,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.Win32;
 using PCL.Core.App;
 using PCL.Core.App.Localization;
@@ -11,18 +13,29 @@ namespace PCL;
 
 public partial class PageXeNeteaseRight
 {
+    private string _lastCandidatesSignature = "";
+    private string _lastVersionsSignature = "";
+
+    private bool _refreshing;
+    private DateTime _enterAt = DateTime.MinValue;
+
     public PageXeNeteaseRight()
     {
         InitializeComponent();
-        Loaded += (_, _) => Refresh();
-        PageEnter += Refresh; // 页面被缓存，每次重新进入都要重新扫描
-        BtnRefresh.Click += (_, _) => Refresh();
+        PanScroll = PanBack;
+        // 页面实例会被缓存，每次重新进入都要刷新；PageEnter 已经覆盖首次进入
+        PageEnter += () =>
+        {
+            _enterAt = DateTime.UtcNow;
+            Refresh();
+        };
+        BtnRefresh.Click += (_, _) => Refresh(true);
         BtnLaunch.Click += (_, _) => LaunchSelected();
         BtnBrowseDir.Click += (_, _) => BrowseDir();
         BtnSave.Click += (_, _) =>
         {
             SaveConfig();
-            Refresh();
+            Refresh(true);
             HintService.Hint(Lang.Text("Xe.Ai.Config.Saved"), HintType.Success);
         };
         BtnOpenFolder.Click += (_, _) => XeNeteaseService.OpenGameDir();
@@ -32,22 +45,67 @@ public partial class PageXeNeteaseRight
         XeNeteaseService.LaunchFinished += OnLaunchFinished;
     }
 
-    /// <summary>重新扫描 .minecraft 并刷新当前页与左栏状态。</summary>
-    public void Refresh()
+    /// <summary>
+    ///     刷新页面。扫描与注册表读取全部在后台线程完成，UI 只做一次赋值，
+    ///     因此不会阻塞页面切换 / 逐个进入动画。
+    /// </summary>
+    /// <param name="force">true 时忽略缓存重新扫盘（用户手动点「重新检测」时使用）。</param>
+    public void Refresh(bool force = false)
     {
+        if (!Dispatcher.CheckAccess())
+        {
+            Dispatcher.BeginInvoke(() => Refresh(force));
+            return;
+        }
+
         LoadConfig();
-        RebuildCandidates();
-        RebuildVersions();
-        RefreshConfirmHint();
+
+        // 1. 有缓存就先填一遍，页面立刻有内容，不会出现「空白再跳出来」
+        var dir = TextMcDir.Text.Trim();
+        var cached = XeNeteaseService.PeekCache(dir);
+        if (cached is not null)
+        {
+            Apply(cached);
+            if (!force) return;
+        }
+
+        // 2. 后台重扫。刚进入页面时先让入场动画跑完，避免重建列表打断动画
+        if (_refreshing) return;
+        _refreshing = true;
+        var delay = DateTime.UtcNow - _enterAt < TimeSpan.FromMilliseconds(420) ? 300 : 0;
+        _ = Task.Run(() =>
+        {
+            try
+            {
+                if (delay > 0) Thread.Sleep(delay);
+                var snapshot = XeNeteaseService.Capture(dir, force);
+                Dispatcher.Invoke(() => Apply(snapshot));
+            }
+            catch (Exception ex)
+            {
+                ModBase.Log(ex, "[XE] 刷新网易版页面失败", ModBase.LogLevel.Debug);
+            }
+            finally
+            {
+                _refreshing = false;
+            }
+        });
+    }
+
+    /// <summary>把后台算好的数据一次性刷到界面上。</summary>
+    private void Apply(XeNeteaseService.Snapshot snapshot)
+    {
+        ApplyCandidates(snapshot.Candidates);
+        ApplyVersions(snapshot);
+        ApplyConfirmHint(snapshot);
         RefreshDiagnostics();
-        ModMain.frmXeNeteaseLeft?.Refresh();
+        ModMain.frmXeNeteaseLeft?.Apply(snapshot);
     }
 
     /// <summary>当前填写的目录不能确认是中国版时给出提示，避免把国际版当网易版启动。</summary>
-    private void RefreshConfirmHint()
+    private void ApplyConfirmHint(XeNeteaseService.Snapshot snapshot)
     {
-        var dir = TextMcDir.Text.Trim();
-        var isUnknown = !string.IsNullOrWhiteSpace(dir) && !XeNeteaseService.IsChinaEditionDir(dir);
+        var isUnknown = snapshot.ConfiguredDir is not null && !snapshot.ConfiguredIsChina;
         HintNotChina.Visibility = isUnknown ? Visibility.Visible : Visibility.Collapsed;
     }
 
@@ -61,13 +119,19 @@ public partial class PageXeNeteaseRight
     {
         Config.Xe.Netease.GameDir = TextMcDir.Text.Trim();
         Config.Xe.Netease.SelectedVersion = TextVersion.Text.Trim();
+        XeNeteaseService.InvalidateDetect();
     }
 
-    private void RebuildCandidates()
+    private void ApplyCandidates(List<XeNeteaseService.Candidate> candidates)
     {
+        var shown = candidates.Take(5).ToList();
+        // 内容没变就不重建，避免每次进页面都整块刷新
+        var signature = string.Join("|", shown.Select(c => $"{c.Path}#{c.Confirmed}#{c.Source}"));
+        if (signature == _lastCandidatesSignature) return;
+        _lastCandidatesSignature = signature;
+
         PanCandidates.Children.Clear();
-        var candidates = XeNeteaseService.Detect();
-        if (candidates.Count == 0)
+        if (shown.Count == 0)
         {
             PanCandidates.Children.Add(new TextBlock
             {
@@ -79,7 +143,7 @@ public partial class PageXeNeteaseRight
             return;
         }
 
-        foreach (var candidate in candidates.Take(5))
+        foreach (var candidate in shown)
         {
             var info = candidate.Path + "  ·  " + Lang.Text("Xe.Netease.Candidate.Source", candidate.Source);
             if (!candidate.Confirmed)
@@ -87,7 +151,7 @@ public partial class PageXeNeteaseRight
 
             var item = new MyListItem
             {
-                Title = new DirectoryInfo(candidate.Path).Name,
+                Title = SafeName(candidate.Path),
                 Info = info,
                 SvgIcon = "lucide/folder-open",
                 Height = 45
@@ -97,18 +161,23 @@ public partial class PageXeNeteaseRight
                 TextMcDir.Text = candidate.Path;
                 TextVersion.Text = "";
                 SaveConfig();
-                Refresh();
+                Refresh(true);
             };
             PanCandidates.Children.Add(item);
         }
     }
 
-    private void RebuildVersions()
+    private void ApplyVersions(XeNeteaseService.Snapshot snapshot)
     {
+        var selected = string.IsNullOrWhiteSpace(TextVersion.Text)
+            ? snapshot.PreferredVersion
+            : TextVersion.Text.Trim();
+        var signature = snapshot.ActiveDir + "||" + string.Join("|", snapshot.Versions) + "||" + selected;
+        if (signature == _lastVersionsSignature) return;
+        _lastVersionsSignature = signature;
+
         PanVersions.Children.Clear();
-        var dir = string.IsNullOrWhiteSpace(TextMcDir.Text) ? null : TextMcDir.Text.Trim();
-        var versions = XeNeteaseService.GetVersions(dir);
-        if (versions.Count == 0)
+        if (snapshot.Versions.Count == 0)
         {
             PanVersions.Children.Add(new TextBlock
             {
@@ -118,11 +187,7 @@ public partial class PageXeNeteaseRight
             return;
         }
 
-        var selected = string.IsNullOrWhiteSpace(TextVersion.Text)
-            ? XeNeteaseService.GetPreferredVersion(dir)
-            : TextVersion.Text.Trim();
-
-        foreach (var version in versions)
+        foreach (var version in snapshot.Versions)
         {
             var isSelected = string.Equals(version, selected, StringComparison.OrdinalIgnoreCase);
             var button = new MyButton
@@ -137,9 +202,26 @@ public partial class PageXeNeteaseRight
             {
                 TextVersion.Text = version;
                 SaveConfig();
-                RebuildVersions();
+                // 只切换高亮，不做任何磁盘访问
+                foreach (var child in PanVersions.Children)
+                    if (child is MyButton target)
+                        target.ColorType = string.Equals(target.Text, version, StringComparison.OrdinalIgnoreCase)
+                            ? MyButton.ColorState.Highlight
+                            : MyButton.ColorState.Normal;
             };
             PanVersions.Children.Add(button);
+        }
+    }
+
+    private static string SafeName(string path)
+    {
+        try
+        {
+            return new DirectoryInfo(path).Name;
+        }
+        catch
+        {
+            return path;
         }
     }
 
@@ -152,7 +234,7 @@ public partial class PageXeNeteaseRight
         if (ok)
         {
             HintService.Hint(message, HintType.Success);
-            Refresh();
+            Refresh(true);
             return;
         }
 
@@ -238,13 +320,12 @@ public partial class PageXeNeteaseRight
         TextMcDir.Text = dialog.FolderName;
         TextVersion.Text = "";
         SaveConfig();
-        Refresh();
+        Refresh(true);
     }
 
     private void Config_LostFocus(object sender, RoutedEventArgs e)
     {
         SaveConfig();
-        RebuildVersions();
-        RefreshConfirmHint();
+        Refresh(true);
     }
 }

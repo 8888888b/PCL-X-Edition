@@ -3991,6 +3991,27 @@
     <sys:String x:Key="Xe.Netease.NotChinaEdition">当前填写的目录未检测到中国版特征（如 MCLDownload、netease 文件或版本 JSON 中的 netease 字段），它更像是国际版的 .minecraft。PCL XE 不会把它列为网易版候选，启动前请确认路径是否正确。</sys:String>
     <sys:String x:Key="Xe.Netease.Status.Unconfirmed">目录未确认是中国版</sys:String>
     <sys:String x:Key="Setup.Update.Xe.Disabled">PCL XE {0} 不提供自动更新，请从发布页获取新版本。</sys:String>
+    <sys:String x:Key="Setup.Update.Xe.Title">PCL XE 更新</sys:String>
+    <sys:String x:Key="Setup.Update.Xe.Check">检查更新</sys:String>
+    <sys:String x:Key="Setup.Update.Xe.Install">立即更新</sys:String>
+    <sys:String x:Key="Setup.Update.Xe.Source">更新源</sys:String>
+    <sys:String x:Key="Setup.Update.Xe.SaveSource">保存</sys:String>
+    <sys:String x:Key="Setup.Update.Xe.AutoCheck">启动时在后台自动检查更新</sys:String>
+    <sys:String x:Key="Setup.Update.Xe.SourceHint">可填自建 JSON 清单地址，或 GitHub Releases 的 latest 接口（https://api.github.com/repos/作者/仓库/releases/latest）。自建清单格式：{&quot;version&quot;:&quot;2.14.02&quot;,&quot;code&quot;:21402,&quot;url&quot;:&quot;下载地址&quot;,&quot;sha256&quot;:&quot;可选校验值&quot;,&quot;notes&quot;:&quot;更新说明&quot;}。</sys:String>
+    <sys:String x:Key="Setup.Update.Xe.Idle">尚未检查更新，点击「检查更新」开始。</sys:String>
+    <sys:String x:Key="Setup.Update.Xe.Checking">正在检查更新…</sys:String>
+    <sys:String x:Key="Setup.Update.Xe.Latest">已是最新版本（{0}）。</sys:String>
+    <sys:String x:Key="Setup.Update.Xe.Available">发现新版本 {0}（当前 {1}）。</sys:String>
+    <sys:String x:Key="Setup.Update.Xe.NoSource">还没有填写更新源，填好并保存后才能检查更新。</sys:String>
+    <sys:String x:Key="Setup.Update.Xe.Error">检查更新失败：{0}</sys:String>
+    <sys:String x:Key="Setup.Update.Xe.ParseFailed">更新源返回的内容无法识别，请检查清单格式。</sys:String>
+    <sys:String x:Key="Setup.Update.Xe.Downloading">正在下载：{0}</sys:String>
+    <sys:String x:Key="Setup.Update.Xe.Verifying">正在校验下载的文件…</sys:String>
+    <sys:String x:Key="Setup.Update.Xe.Ready">更新已准备好，启动器即将重启完成安装。</sys:String>
+    <sys:String x:Key="Setup.Update.Xe.DownloadFailed">下载更新失败：{0}</sys:String>
+    <sys:String x:Key="Setup.Update.Xe.HashMismatch">下载的文件校验失败（SHA-256 不匹配），已删除，请重试。</sys:String>
+    <sys:String x:Key="Setup.Update.Xe.SourceSaved">更新源已保存。</sys:String>
+    <sys:String x:Key="Setup.Update.Xe.NewFoundHint">发现 PCL XE 新版本 {0}，可在「设置 → 关于与更新」中安装。</sys:String>
     <sys:String x:Key="Xe.Netease.Source.ManualUnconfirmed">手动指定（未确认是中国版）</sys:String>
     <sys:String x:Key="Xe.Netease.Candidate.Unconfirmed">未确认是中国版</sys:String>
 

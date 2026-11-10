@@ -3991,6 +3991,27 @@
     <sys:String x:Key="Xe.Netease.NotChinaEdition">The folder you entered shows no China Edition markers (such as MCLDownload, netease files or a netease field in the version JSON), so it looks like an international .minecraft. PCL XE will not list it as a China Edition candidate; please double-check the path.</sys:String>
     <sys:String x:Key="Xe.Netease.Status.Unconfirmed">Folder not confirmed as China Edition</sys:String>
     <sys:String x:Key="Setup.Update.Xe.Disabled">PCL XE {0} has no built-in updater; get builds from its releases.</sys:String>
+    <sys:String x:Key="Setup.Update.Xe.Title">PCL XE Update</sys:String>
+    <sys:String x:Key="Setup.Update.Xe.Check">Check for updates</sys:String>
+    <sys:String x:Key="Setup.Update.Xe.Install">Update now</sys:String>
+    <sys:String x:Key="Setup.Update.Xe.Source">Update source</sys:String>
+    <sys:String x:Key="Setup.Update.Xe.SaveSource">Save</sys:String>
+    <sys:String x:Key="Setup.Update.Xe.AutoCheck">Check for updates in the background on startup</sys:String>
+    <sys:String x:Key="Setup.Update.Xe.SourceHint">Use a self-hosted JSON manifest, or a GitHub Releases latest endpoint (https://api.github.com/repos/OWNER/REPO/releases/latest). Manifest format: {&quot;version&quot;:&quot;2.14.02&quot;,&quot;code&quot;:21402,&quot;url&quot;:&quot;download URL&quot;,&quot;sha256&quot;:&quot;optional checksum&quot;,&quot;notes&quot;:&quot;release notes&quot;}.</sys:String>
+    <sys:String x:Key="Setup.Update.Xe.Idle">No check yet. Click "Check for updates" to start.</sys:String>
+    <sys:String x:Key="Setup.Update.Xe.Checking">Checking for updates…</sys:String>
+    <sys:String x:Key="Setup.Update.Xe.Latest">You are up to date ({0}).</sys:String>
+    <sys:String x:Key="Setup.Update.Xe.Available">Version {0} is available (current {1}).</sys:String>
+    <sys:String x:Key="Setup.Update.Xe.NoSource">No update source configured yet. Fill it in and save before checking.</sys:String>
+    <sys:String x:Key="Setup.Update.Xe.Error">Update check failed: {0}</sys:String>
+    <sys:String x:Key="Setup.Update.Xe.ParseFailed">The update source returned an unrecognized document. Check the manifest format.</sys:String>
+    <sys:String x:Key="Setup.Update.Xe.Downloading">Downloading: {0}</sys:String>
+    <sys:String x:Key="Setup.Update.Xe.Verifying">Verifying the downloaded file…</sys:String>
+    <sys:String x:Key="Setup.Update.Xe.Ready">Update is ready. The launcher will restart to finish installing.</sys:String>
+    <sys:String x:Key="Setup.Update.Xe.DownloadFailed">Download failed: {0}</sys:String>
+    <sys:String x:Key="Setup.Update.Xe.HashMismatch">Checksum mismatch (SHA-256). The file was deleted, please retry.</sys:String>
+    <sys:String x:Key="Setup.Update.Xe.SourceSaved">Update source saved.</sys:String>
+    <sys:String x:Key="Setup.Update.Xe.NewFoundHint">PCL XE {0} is available. Install it from Settings → About &amp; Update.</sys:String>
     <sys:String x:Key="Xe.Netease.Source.ManualUnconfirmed">Manual (not confirmed as China Edition)</sys:String>
     <sys:String x:Key="Xe.Netease.Candidate.Unconfirmed">not confirmed as China Edition</sys:String>
 

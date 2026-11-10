@@ -82,9 +82,15 @@ public class MyPageLeft : Grid
                     if (element is MyListItem)
                         aniList.Add(ModAnimation.AaCode(() =>
                         {
-                            ((MyListItem)element).isMouseOverAnimationEnabled = true;
-                            ((MyListItem)element).RefreshColor(this, new EventArgs());
-                        }, delay + 280));
+                            var item = (MyListItem)element;
+                            item.isMouseOverAnimationEnabled = true;
+                            // 逐个进入动画用的是 TranslateTransform，而 RefreshColor 的颜色/缩放动画需要 ScaleTransform。
+                            // 这里必须等位移动画结束后换回 ScaleTransform，否则 RefreshColor 里的强制转换会抛异常，
+                            // 导致整段左栏动画中断（表现为切换页面时列表“跳”到位）。
+                            if (element.RenderTransform is not ScaleTransform)
+                                element.RenderTransform = new ScaleTransform(1d, 1d);
+                            item.RefreshColor(this, new EventArgs());
+                        }, delay + 320));
                     delay += Math.Max(15 - id, 7) * 2;
                     id += 1;
                 }
