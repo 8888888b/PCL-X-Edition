@@ -46,6 +46,38 @@
 
 ---
 
+## 自动更新与发版
+
+客户端「设置 → 关于与更新」里的更新源默认指向本仓库的 GitHub Releases：
+
+```
+https://api.github.com/repos/8888888b/PCL-X-Edition/releases/latest
+```
+
+检查 → 展示更新说明 → 下载（带进度）→ 校验 SHA-256 → 交给启动器内置更新器替换 `PCL\Plain Craft Launcher XE.exe` 并重启，不需要额外的更新程序。启动后还会在后台静默检查一次（6 小时节流，可在该卡片里关闭）。
+
+发新版本只需两步：
+
+1. 改 `Plain Craft Launcher 2/metadata.json` 的 `base` / `code`，在 `CHANGELOG.md` 加上同名小节，提交；
+2. 打 tag 并推送：`git tag v2.14.03 && git push origin v2.14.03`。
+
+`PCL XE Release` 工作流会自动构建单文件 exe、从 CHANGELOG 取该版本的更新说明、算出 sha256 与体积，发布 GitHub Release 并挂上 `PCLXE-<版本>-x64.exe`。客户端下次检查即可看到新版本（tag 里带 `beta` / `rc` 会标为预发布）。
+
+也可以把更新源改成自建 JSON 清单（例如自建镜像）：
+
+```json
+{
+  "version": "2.14.03",
+  "code": 21403,
+  "url": "https://example.com/PCLXE-2.14.03-x64.exe",
+  "sha256": "可选的 SHA-256，填了就强制校验",
+  "size": 24015653,
+  "notes": "更新说明"
+}
+```
+
+---
+
 # PCL Symbio Edition（上游基线说明）
 
 <div align="center">

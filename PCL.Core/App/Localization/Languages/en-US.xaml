@@ -3997,7 +3997,7 @@
     <sys:String x:Key="Setup.Update.Xe.Source">Update source</sys:String>
     <sys:String x:Key="Setup.Update.Xe.SaveSource">Save</sys:String>
     <sys:String x:Key="Setup.Update.Xe.AutoCheck">Check for updates in the background on startup</sys:String>
-    <sys:String x:Key="Setup.Update.Xe.SourceHint">Use a self-hosted JSON manifest, or a GitHub Releases latest endpoint (https://api.github.com/repos/OWNER/REPO/releases/latest). Manifest format: {&quot;version&quot;:&quot;2.14.02&quot;,&quot;code&quot;:21402,&quot;url&quot;:&quot;download URL&quot;,&quot;sha256&quot;:&quot;optional checksum&quot;,&quot;notes&quot;:&quot;release notes&quot;}.</sys:String>
+    <sys:String x:Key="Setup.Update.Xe.SourceHint">Defaults to the official PCL XE source (https://api.github.com/repos/8888888b/PCL-X-Edition/releases/latest); publish a Release with an exe asset and it is picked up automatically. You can also use a self-hosted JSON manifest: {&quot;version&quot;:&quot;2.14.02&quot;,&quot;code&quot;:21402,&quot;url&quot;:&quot;download URL&quot;,&quot;sha256&quot;:&quot;optional checksum&quot;,&quot;notes&quot;:&quot;release notes&quot;}.</sys:String>
     <sys:String x:Key="Setup.Update.Xe.Idle">No check yet. Click "Check for updates" to start.</sys:String>
     <sys:String x:Key="Setup.Update.Xe.Checking">Checking for updates…</sys:String>
     <sys:String x:Key="Setup.Update.Xe.Latest">You are up to date ({0}).</sys:String>
@@ -4012,6 +4012,7 @@
     <sys:String x:Key="Setup.Update.Xe.HashMismatch">Checksum mismatch (SHA-256). The file was deleted, please retry.</sys:String>
     <sys:String x:Key="Setup.Update.Xe.SourceSaved">Update source saved.</sys:String>
     <sys:String x:Key="Setup.Update.Xe.NewFoundHint">PCL XE {0} is available. Install it from Settings → About &amp; Update.</sys:String>
+    <sys:String x:Key="Setup.Update.Xe.RateLimited">GitHub API rate limit reached (60 requests per hour without signing in). Please try again later.</sys:String>
     <sys:String x:Key="Xe.Netease.Source.ManualUnconfirmed">Manual (not confirmed as China Edition)</sys:String>
     <sys:String x:Key="Xe.Netease.Candidate.Unconfirmed">not confirmed as China Edition</sys:String>
 

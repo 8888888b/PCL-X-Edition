@@ -1,0 +1,115 @@
+name: PCL XE Release
+
+# 打 tag（v2.14.03 之类）时自动构建单文件 exe 并发布 Release。
+# 客户端「设置 → 关于与更新」默认读取本仓库 releases/latest，
+# 因此只要 Release 里挂了 exe 资源，自动更新即可工作。
+
+permissions:
+  contents: write
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: '要发布的 tag（例如 v2.14.03），需先推送该 tag'
+        required: true
+        type: string
+
+concurrency:
+  group: xe-release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v5
+        with:
+          global-json-file: global.json
+
+      - name: Resolve version
+        id: meta
+        run: |
+          if [ -n "${{ inputs.tag }}" ]; then
+            tag="${{ inputs.tag }}"
+          else
+            tag="${GITHUB_REF_NAME}"
+          fi
+          version="${tag#v}"
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          if echo "$version" | grep -qiE 'beta|rc|alpha|pre'; then
+            echo "prerelease=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "prerelease=false" >> "$GITHUB_OUTPUT"
+          fi
+          echo "发布版本：$version"
+
+      - name: Build
+        env:
+          PCL_WRITE_SECRET: '1'
+          PCL_GITHUB_SHA: ${{ github.sha }}
+        run: |
+          dotnet publish "Plain Craft Launcher 2/Plain Craft Launcher 2.csproj" \
+            -p:Configuration=Release -p:Platform=x64 \
+            -p:DeleteExistingFiles=true -o ./out --no-self-contained
+
+      - name: Package release asset
+        id: pack
+        run: |
+          set -euo pipefail
+          src="out/Plain Craft Launcher 2.exe"
+          asset="PCLXE-${{ steps.meta.outputs.version }}-x64.exe"
+          cp "$src" "$asset"
+          sha=$(sha256sum "$asset" | cut -d' ' -f1)
+          size=$(stat -c%s "$asset")
+          echo "asset=$asset" >> "$GITHUB_OUTPUT"
+          echo "sha256=$sha" >> "$GITHUB_OUTPUT"
+          echo "size=$size" >> "$GITHUB_OUTPUT"
+          {
+            echo "sha256: \`$sha\`"
+            echo "size: $size bytes"
+          } > release-meta.md
+
+      - name: Extract changelog for this version
+        id: notes
+        run: |
+          set -euo pipefail
+          version="${{ steps.meta.outputs.version }}"
+          # 从 CHANGELOG.md 里取形如 "## 2.14.03" 的小节
+          awk -v ver="$version" '
+            $0 ~ "^## "ver"[[:space:]]*$" {flag=1; next}
+            flag && /^## / {exit}
+            flag {print}
+          ' CHANGELOG.md > notes.md || true
+          if [ ! -s notes.md ]; then
+            echo "PCL XE $version" > notes.md
+          fi
+          cat release-meta.md >> notes.md
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: PCLXE-${{ steps.meta.outputs.version }}-x64
+          path: ${{ steps.pack.outputs.asset }}
+
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.meta.outputs.tag }}
+          name: PCL XE ${{ steps.meta.outputs.version }}
+          body_path: notes.md
+          prerelease: ${{ steps.meta.outputs.prerelease == 'true' }}
+          files: ${{ steps.pack.outputs.asset }}
+          fail_on_unmatched_files: true

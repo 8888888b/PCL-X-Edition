@@ -2,6 +2,20 @@
 
 > 上游 PCL Symbio Edition 的更新日志（2.14 → 2.17）保留在下方。PCL XE 的改动从本节开始记录。
 
+## 2.14.03
+
+### 🔧 调整
+
+- **自动更新默认指向 PCL XE 官方仓库**：更新源默认值改为 `https://api.github.com/repos/8888888b/PCL-X-Edition/releases/latest`，新装即开箱可用；发布 Release 并附上 exe 资源后，客户端即可检测到新版本
+- 更新源输入框清空后保存会自动恢复为官方源，不用再手抄地址
+- 仓库还没有发布过 Release 时（GitHub 返回 404）不再报错，视为「暂无新版本」
+- GitHub 未登录调用限流（60 次/小时）时给出可读提示，而不是一段 HTTP 异常
+
+### 🛠 构建
+
+- 新增 `PCL XE Release` 工作流：推送 `v*` tag 自动构建单文件 exe、按 tag 从 CHANGELOG 取更新说明、校验并发布 GitHub Release（含 sha256 与体积），可直接被自动更新读取
+- 移除上游遗留的 `Publish (Release/Beta)` 与 MirrorChyan 工作流：它们依赖本仓库没有的 GPG / MirrorChyan 密钥，每次发布会直接失败
+
 ## 2.14.02
 
 ### ✨ 新增

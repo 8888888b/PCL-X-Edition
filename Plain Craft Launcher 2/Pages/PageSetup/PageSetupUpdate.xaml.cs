@@ -67,7 +67,10 @@ public partial class PageSetupUpdate
 
     private void SaveXeSource()
     {
-        Config.Xe.Update.ManifestUrl = TextXeSource.Text.Trim();
+        // 留空表示恢复默认的官方更新源，避免用户清空后再也想不起地址
+        var url = TextXeSource.Text.Trim();
+        Config.Xe.Update.ManifestUrl = url.Length == 0 ? XeUpdateService.DefaultManifestUrl : url;
+        TextXeSource.Text = Config.Xe.Update.ManifestUrl;
         XeUpdateService.Reset();
         BtnXeInstall.Visibility = Visibility.Collapsed;
         TextXeNotes.Visibility = Visibility.Collapsed;
@@ -96,7 +99,10 @@ public partial class PageSetupUpdate
             var info = await XeUpdateService.CheckAsync();
             if (info is null)
             {
-                SetXeStatus(Lang.Text("Setup.Update.Xe.NoSource"), false);
+                // 已配置更新源但没有版本可比（含仓库还没发布 Release 的 404）时，视为已是最新
+                SetXeStatus(XeUpdateService.IsConfigured
+                    ? Lang.Text("Setup.Update.Xe.Latest", ModBase.versionBaseName)
+                    : Lang.Text("Setup.Update.Xe.NoSource"), false);
                 return;
             }
 

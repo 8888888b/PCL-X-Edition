@@ -9,6 +9,10 @@ namespace PCL.Core.App;
 // ReSharper disable InconsistentNaming
 public static partial class Config
 {
+    /// <summary>PCL XE 官方更新源：GitHub Releases 的 latest 接口，发布 Release 后即可自动检测。</summary>
+    public const string XeDefaultManifestUrl =
+        "https://api.github.com/repos/8888888b/PCL-X-Edition/releases/latest";
+
     /// <summary>
     /// 系统配置。
     /// </summary>
@@ -676,8 +680,8 @@ public static partial class Config
         /// <summary>自动更新配置。</summary>
         [ConfigGroup("Update")] partial class UpdateConfigGroup
         {
-            /// <summary>更新清单地址：自建 JSON，或 GitHub Releases API 的 latest 接口。</summary>
-            [ConfigItem<string>("XeUpdateManifestUrl", "", ConfigSource.Local)]
+            /// <summary>更新清单地址：自建 JSON，或 GitHub Releases API 的 latest 接口。默认指向 PCL XE 官方仓库。</summary>
+            [ConfigItem<string>("XeUpdateManifestUrl", XeDefaultManifestUrl, ConfigSource.Local)]
             public partial string ManifestUrl { get; set; }
 
             /// <summary>启动后在后台自动检查更新。</summary>

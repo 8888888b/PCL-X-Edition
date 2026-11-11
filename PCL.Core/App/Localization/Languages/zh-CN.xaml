@@ -3997,7 +3997,7 @@
     <sys:String x:Key="Setup.Update.Xe.Source">更新源</sys:String>
     <sys:String x:Key="Setup.Update.Xe.SaveSource">保存</sys:String>
     <sys:String x:Key="Setup.Update.Xe.AutoCheck">启动时在后台自动检查更新</sys:String>
-    <sys:String x:Key="Setup.Update.Xe.SourceHint">可填自建 JSON 清单地址，或 GitHub Releases 的 latest 接口（https://api.github.com/repos/作者/仓库/releases/latest）。自建清单格式：{&quot;version&quot;:&quot;2.14.02&quot;,&quot;code&quot;:21402,&quot;url&quot;:&quot;下载地址&quot;,&quot;sha256&quot;:&quot;可选校验值&quot;,&quot;notes&quot;:&quot;更新说明&quot;}。</sys:String>
+    <sys:String x:Key="Setup.Update.Xe.SourceHint">默认使用 PCL XE 官方源（https://api.github.com/repos/8888888b/PCL-X-Edition/releases/latest），发布 Release 并附上 exe 后即可自动检测。也可以填自建 JSON 清单地址，格式：{&quot;version&quot;:&quot;2.14.02&quot;,&quot;code&quot;:21402,&quot;url&quot;:&quot;下载地址&quot;,&quot;sha256&quot;:&quot;可选校验值&quot;,&quot;notes&quot;:&quot;更新说明&quot;}。</sys:String>
     <sys:String x:Key="Setup.Update.Xe.Idle">尚未检查更新，点击「检查更新」开始。</sys:String>
     <sys:String x:Key="Setup.Update.Xe.Checking">正在检查更新…</sys:String>
     <sys:String x:Key="Setup.Update.Xe.Latest">已是最新版本（{0}）。</sys:String>
@@ -4012,6 +4012,7 @@
     <sys:String x:Key="Setup.Update.Xe.HashMismatch">下载的文件校验失败（SHA-256 不匹配），已删除，请重试。</sys:String>
     <sys:String x:Key="Setup.Update.Xe.SourceSaved">更新源已保存。</sys:String>
     <sys:String x:Key="Setup.Update.Xe.NewFoundHint">发现 PCL XE 新版本 {0}，可在「设置 → 关于与更新」中安装。</sys:String>
+    <sys:String x:Key="Setup.Update.Xe.RateLimited">GitHub 接口调用过于频繁（未登录每小时 60 次），请稍后再试。</sys:String>
     <sys:String x:Key="Xe.Netease.Source.ManualUnconfirmed">手动指定（未确认是中国版）</sys:String>
     <sys:String x:Key="Xe.Netease.Candidate.Unconfirmed">未确认是中国版</sys:String>
 

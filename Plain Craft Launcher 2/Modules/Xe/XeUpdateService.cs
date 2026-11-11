@@ -37,6 +37,9 @@ public static class XeUpdateService
     public static string CurrentVersion => ModBase.versionBaseName;
     public static int CurrentCode => ModBase.versionCode;
 
+    /// <summary>官方更新源（GitHub Releases API），也是更新源留空时的默认值。</summary>
+    public static string DefaultManifestUrl => Config.XeDefaultManifestUrl;
+
     public static bool IsConfigured => !string.IsNullOrWhiteSpace(Config.Xe.Update.ManifestUrl);
 
     /// <summary>检查更新。未配置更新源时返回 null。</summary>
@@ -46,6 +49,19 @@ public static class XeUpdateService
         if (url.Length == 0) return null;
 
         using var response = await XeHttp.General.GetAsync(url, ct).ConfigureAwait(false);
+        // 仓库还没发布过 Release 时 GitHub 返回 404，这不是错误，只是没有新版本
+        if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+        {
+            Latest = null;
+            Config.Xe.Update.LastCheck = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+            return null;
+        }
+
+        // 未登录调用 GitHub API 有 60 次/小时的限制，超出时给出可读提示
+        if (response.StatusCode == System.Net.HttpStatusCode.Forbidden &&
+            url.Contains("api.github.com", StringComparison.OrdinalIgnoreCase))
+            throw new InvalidOperationException(Lang.Text("Setup.Update.Xe.RateLimited"));
+
         response.EnsureSuccessStatusCode();
         var text = await response.Content.ReadAsStringAsync(ct).ConfigureAwait(false);
         var info = Parse(text, url) ?? throw new InvalidOperationException(
