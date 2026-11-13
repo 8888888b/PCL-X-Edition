@@ -14,7 +14,7 @@ public static class UpdateManager
 
     public static UpdatesWrapperModel remoteServer = new(new List<IUpdateSource>
     {
-        new UpdatesGitHubModel("Hydrogen-Peroxide", "PCL-Symbio-Edition")
+        new UpdatesGitHubModel("8888888b", "PCL-X-Edition")
     });
 
     public static bool IsCurrentVersionBeta

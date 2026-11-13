@@ -3588,7 +3588,7 @@ public static class ModBase
                                  Lang.Text("Common.Action.OpenFolder"),
                                  Lang.Text("Setup.Feedback.Reminder.NotNeeded")) ==
                              1)) OpenExplorer(exePath + @"PCL\Log\");
-        OpenWebsite("https://github.com/Hydrogen-Peroxide/PCL-Symbio-Edition");
+        OpenWebsite("https://github.com/8888888b/PCL-X-Edition");
     }
 
     public static bool CanFeedback(bool showHint)

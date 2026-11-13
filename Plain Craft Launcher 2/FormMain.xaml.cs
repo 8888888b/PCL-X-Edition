@@ -47,7 +47,7 @@ public partial class FormMain
                 changelog = Lang.Text("Main.UpdateLog.Builtin");
             if (ModMain.MyMsgBoxMarkdown(changelog,
                     Lang.Text("Main.UpdateLog.Title", ModBase.versionBranchName, ModBase.versionBaseName), Lang.Text("Common.Action.Confirm"), Lang.Text("Main.UpdateLog.FullChangelog")) ==
-                2) ModBase.OpenWebsite("https://github.com/Hydrogen-Peroxide/PCL-Symbio-Edition");
+                2) ModBase.OpenWebsite("https://github.com/8888888b/PCL-X-Edition");
         }, "UpdateLog Output");
     }
 
@@ -218,6 +218,9 @@ public partial class FormMain
         // Timer 启动
         ModAnimation.AniStart();
         ModMain.TimerMainStart();
+        // 空闲时回收运行内存（切到后台过久或最小化后）
+        XeMemoryService.AttachWindow(new WindowInteropHelper(this).Handle);
+        XeMemoryService.Start();
         // 预热网易版扫描：首次切到「网易版」页面时直接用缓存，不再在 UI 线程扫盘
         ModBase.RunInNewThread(() =>
         {
@@ -275,7 +278,7 @@ public partial class FormMain
                         $"{hint}{"\r\n"}{"\r\n"}{Lang.Text("Main.SpecialVersion.HideHintNotice")}",
                         Lang.Text("Main.SpecialVersion.Title"), Lang.Text("Main.SpecialVersion.IUnderstand"), Lang.Text("Main.SpecialVersion.OpenDownloadPageAndExit"), isWarn: true, button2Action: () =>
                         {
-                            ModBase.OpenWebsite("https://github.com/Hydrogen-Peroxide/PCL-Symbio-Edition");
+                            ModBase.OpenWebsite("https://github.com/8888888b/PCL-X-Edition");
                             EndProgram(false);
                         });
                 }
@@ -631,7 +634,7 @@ public partial class FormMain
             if (!isLogShown)
             {
                 ModBase.FeedbackInfo();
-                ModBase.Log("请在 https://github.com/Hydrogen-Peroxide/PCL-Symbio-Edition 提交错误报告，以便于解决此问题！（这也有可能是原版 PCL 的问题）");
+                ModBase.Log("请在 https://github.com/8888888b/PCL-X-Edition 提交错误报告，以便于解决此问题！（这也有可能是原版 PCL 的问题）");
                 isLogShown = true;
                 ModBase.ShellOnly(LogWrapper.CurrentLogger.CurrentLogFiles.Last());
             }
@@ -909,7 +912,6 @@ public partial class FormMain
 
     private IDataObject _HandleDrag_PrevData;
     private DragDropEffects _HandleDrag_PrevEffects;
-
     // 文件拖放
     private void HandleDrag(object sender, DragEventArgs e)
     {
@@ -1384,6 +1386,8 @@ public partial class FormMain
             {
                 ModVideoBack.isMinimized = true;
                 ModVideoBack.VideoPause();
+                // 最小化后把暂时用不到的内存还给系统
+                XeMemoryService.ScheduleTrim();
                 break;
             }
             case WindowState.Normal:

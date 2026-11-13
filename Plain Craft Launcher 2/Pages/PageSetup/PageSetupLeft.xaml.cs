@@ -148,7 +148,7 @@ public partial class PageSetupLeft
                 }
                 case 2:
                 {
-                    ModBase.OpenWebsite("https://github.com/Hydrogen-Peroxide/PCL-Symbio-Edition");
+                    ModBase.OpenWebsite("https://github.com/8888888b/PCL-X-Edition");
                     break;
                 }
             }

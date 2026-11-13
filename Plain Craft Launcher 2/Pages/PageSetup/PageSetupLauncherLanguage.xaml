@@ -139,7 +139,7 @@
                             SvgIcon="lucide/git-pull-request-arrow"
                             ColorType="Highlight"
                             local:CustomEventService.EventType="OpenUrl"
-                            local:CustomEventService.EventData="https://github.com/Hydrogen-Peroxide/PCL-Symbio-Edition/pulls" />
+                            local:CustomEventService.EventData="https://github.com/8888888b/PCL-X-Edition/pulls" />
                     </StackPanel>
                 </StackPanel>
             </local:MyCard>

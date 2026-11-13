@@ -2832,7 +2832,7 @@
     <!-- Setup.About.Legal -->
 
     <sys:String x:Key="Setup.About.Legal.CommunitySource">PCL XE source code</sys:String>
-    <sys:String x:Key="Setup.About.Legal.CopyrightText">Copyright © PCL Symbio Edition &amp; LTCat (龙腾猫跃) 2026.&#xD;NOT AN OFFICIAL MINECRAFT PRODUCT. NOT APPROVED BY OR ASSOCIATED WITH MOJANG OR MICROSOFT.</sys:String>
+    <sys:String x:Key="Setup.About.Legal.CopyrightText">Copyright © Plain Craft Launcher XE &amp; LTCat (龙腾猫跃) 2026.&#xD;NOT AN OFFICIAL MINECRAFT PRODUCT. NOT APPROVED BY OR ASSOCIATED WITH MOJANG OR MICROSOFT.</sys:String>
     <sys:String x:Key="Setup.About.Legal.OtherInfo">Other information</sys:String>
     <sys:String x:Key="Setup.About.Legal.PrivacyNotice">Privacy statement</sys:String>
     <sys:String x:Key="Setup.About.Legal.PrivacyText">The User Agent of this software includes the launcher version number to count the number of users on each version.&#xD;Other than this, this software will not upload any other information to the developers.&#xD;* Hardware/software survey features follow their own privacy policies, which are separate from this notice.</sys:String>
@@ -2844,7 +2844,7 @@
     <sys:String x:Key="Setup.About.SpecialThanks.Info.BedrockBoot">Provided the legacy Bedrock edition launch solution and implementation reference.</sys:String>
     <sys:String x:Key="Setup.About.SpecialThanks.Info.Bmclapi">Provided BMCLAPI mirror and Forge installation tool. Details at https://bmclapi.bangbang93.com</sys:String>
     <sys:String x:Key="Setup.About.SpecialThanks.Info.Cloud">Provided cloud services for PCL CE.</sys:String>
-    <sys:String x:Key="Setup.About.SpecialThanks.Info.Hydrogen">Maintainer of PCL Symbio Edition.</sys:String>
+    <sys:String x:Key="Setup.About.SpecialThanks.Info.Hydrogen">Maintainer of PCL Symbio Edition, the upstream PCL XE is based on.</sys:String>
     <sys:String x:Key="Setup.About.SpecialThanks.Info.Mcim">Provided MCIM community resource mirrors and image hosting services for the help center!</sys:String>
     <sys:String x:Key="Setup.About.SpecialThanks.Info.Mcmod">Provided Chinese translation of mods and more related information!</sys:String>
     <sys:String x:Key="Setup.About.SpecialThanks.Name.BedrockBoot">BedrockBoot @ Round Studio</sys:String>
@@ -3625,7 +3625,7 @@
 
     <!-- Tools.Test -->
 
-    <sys:String x:Key="Tools.Test.CeNotice">For ease of maintenance, this feature is not included in the Symbio Edition...</sys:String>
+    <sys:String x:Key="Tools.Test.CeNotice">For ease of maintenance, this feature is not included in Plain Craft Launcher XE...</sys:String>
     <sys:String x:Key="Tools.Test.Crash.ManualCrash">Manual crash</sys:String>
     <sys:String x:Key="Tools.Test.Crash.Title">Crash test</sys:String>
     <sys:String x:Key="Tools.Test.Dependency.Checking">Checking environment...</sys:String>
@@ -3732,7 +3732,7 @@
     <sys:String x:Key="Tools.Test.Skin.TooFrequent">Skin fetch has been rate-limited. Please try again in 5 minutes!</sys:String>
     <sys:String x:Key="Tools.Test.Unlock.Description">MCBEUnlock++ is a community-made Bedrock unlocking tool. Put the unlocked DLL into the preload folder of the version directory and PCL XE will inject it on launch.&#xA;This launcher only provides a link to its official website; the tool is neither bundled nor hosted here.</sys:String>
     <sys:String x:Key="Tools.Test.Unlock.Download">Open official website</sys:String>
-    <sys:String x:Key="Tools.Test.Unlock.Notice">PCL Symbio Edition encourages all players to purchase and support the game through official channels.</sys:String>
+    <sys:String x:Key="Tools.Test.Unlock.Notice">Plain Craft Launcher XE encourages all players to purchase and support the game through official channels.</sys:String>
     <sys:String x:Key="Tools.Test.Unlock.Title">MCBEUnlock++</sys:String>
 
     <!-- Update -->
@@ -3740,7 +3740,7 @@
     <sys:String x:Key="Update.Action">Update</sys:String>
     <sys:String x:Key="Update.Available">A new launcher version is available ({0} -&gt; {1})&#xA;Update now?</sys:String>
     <sys:String x:Key="Update.Check.Failed">Unable to get latest version information. Please check your network connection.</sys:String>
-    <sys:String x:Key="Update.CommunityNotice.Body">You are using PCL XE (PCL Symbio Edition). Please DO NOT report issues to the original PCL repository!&#xA;PCL XE is independently developed and maintained by Hydrogen-Peroxide, is not affiliated with LTCat (龙腾猫跃), and does not guarantee your usage.&#xA;&#xA;If you downloaded PCL XE by mistake, we recommend using the original PCL instead.&#xA;&#xA;Differences from the original version:&#xA;- Themes: only some fixed blue themes; no plans to add new themes.&#xA;- Toolbox: some content from the original version is missing (Echo Cave, Don't Click).&#xA;&#xA;This message will be shown once after a launcher update.</sys:String>
+    <sys:String x:Key="Update.CommunityNotice.Body">You are using PCL XE (Plain Craft Launcher XE). Please DO NOT report issues to the original PCL repository!&#xA;PCL XE is a third-party fork of PCL Symbio Edition, developed and maintained independently by the PCL XE project. It is not affiliated with LTCat (龙腾猫跃) or the official PCL CE project, and does not guarantee your usage.&#xA;&#xA;Differences from the original version:&#xA;- China Edition: locate and launch Minecraft China Edition versions directly without starting the official launcher.&#xA;- Ask AI: connect any OpenAI-compatible endpoint and let the launcher act on a conversation.&#xA;- Auto update: uses this fork's own update source, so an upstream release cannot overwrite it.&#xA;&#xA;This message will be shown once after a launcher update.</sys:String>
     <sys:String x:Key="Update.CommunityNotice.Confirm">I understand</sys:String>
     <sys:String x:Key="Update.CommunityNotice.Title">PCL XE notice</sys:String>
     <sys:String x:Key="Update.Error.FetchFailed">Failed to get launcher update. Please check your network connection.</sys:String>

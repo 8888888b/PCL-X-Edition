@@ -76,33 +76,6 @@ https://api.github.com/repos/8888888b/PCL-X-Edition/releases/latest
 }
 ```
 
----
-
-# PCL Symbio Edition（上游基线说明）
-
-<div align="center">
-
-[![Stars](https://img.shields.io/github/stars/Hydrogen-Peroxide/PCL-Symbio-Edition?style=for-the-badge&logo=github&label=stars&labelColor=444444&color=eac54f)](https://github.com/Hydrogen-Peroxide/PCL-Symbio-Edition/stargazers)
-![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/Hydrogen-Peroxide/PCL-Symbio-Edition/build-test.yml?style=for-the-badge)
-
-[![Pull requests](https://img.shields.io/github/issues-pr/Hydrogen-Peroxide/PCL-Symbio-Edition?style=for-the-badge&label=pull%20requests&labelColor=444444&color=1F883D&logo=github)](https://github.com/Hydrogen-Peroxide/PCL-Symbio-Edition/pulls)
-
-[下载 PCL Symbio Edition](https://github.com/Hydrogen-Peroxide/PCL-Symbio-Edition/releases) |
-[上游存储库](https://github.com/Meloong-Git/PCL)
-
-[提交问题](https://github.com/Hydrogen-Peroxide/PCL-Symbio-Edition/issues) |
-[贡献指南](https://github.com/Hydrogen-Peroxide/PCL-Symbio-Edition/blob/dev/CONTRIBUTING.md)
-
-</div>
-
-PCL Symbio Edition（Plain Craft Launcher Symbio Edition）是由 Hydrogen-Peroxide 维护的第三方 Minecraft 启动器，基于 PCL 开源代码开发，在保留原有交互习惯的基础上补齐了基岩版支持、实例管理与资源下载等能力。
-
-- PCL XE 版本：`2.14.00`（独立版本号，不再跟随上游序列）
-- 上游基线：PCL Symbio Edition `2.17.14`（再上游 PCL `2.12.1`）
-- 技术栈：C# / WPF / .NET 10
-
-PCL Symbio Edition 与 PCL 官方版没有隶属关系，请不要向官方仓库反馈 PCL Symbio Edition 的问题。
-
 ## 功能概览
 
 ### Java 版
@@ -137,8 +110,9 @@ PCL Symbio Edition 与 PCL 官方版没有隶属关系，请不要向官方仓�
 - 主题配色与背景可自定义，页面切换与列表滚动带有过渡动画
 - 自动扫描本机 Java，减少手动配置
 - 启动失败时对日志进行分析，给出可读的原因与建议
+- 空闲或切到后台时自动归还运行内存，长期挂着也不会越用越吃内存
 
-> 本分支不包含联机大厅功能，相关模块已从代码库中移除，目前没有已确认的恢复排期。
+> PCL XE 不包含联机大厅功能，相关模块已从代码库中移除，目前没有已确认的恢复排期。
 
 ## 支持平台
 
@@ -151,21 +125,21 @@ PCL Symbio Edition 与 PCL 官方版没有隶属关系，请不要向官方仓�
 
 **完整支持**：尽可能提供一切相关支持，但必须确保启动器为最新版本。
 
-**理论能跑，酌情提供支持**：PCL Symbio Edition 应该可以在这些平台上运行，但不保证功能完全可用。你可能需要升级到完整支持的系统版本以获得进一步技术支持。
+**理论能跑，酌情提供支持**：PCL XE 应该可以在这些平台上运行，但不保证功能完全可用。你可能需要升级到完整支持的系统版本以获得进一步技术支持。
 
-**不支持**：PCL Symbio Edition 在这些平台的可用性较低，甚至无法启动。请升级操作系统以使用 PCL Symbio Edition。
+**不支持**：PCL XE 在这些平台的可用性较低，甚至无法启动。请升级操作系统以使用 PCL XE。
 
 **仅支持交叉编译开发**：源代码可以在 macOS 与 Linux 上编译，但无法直接运行。作为开发者，你可以在这些平台上开发，再将编译产物转移到 Windows 测试。
 
-**注**：仅对最新版本的启动器提供支持。取决于部分问题的特殊性（如系统不完整），有时你仍然必须升级操作系统以继续获得支持。你仍然可以尝试在不受支持的系统上使用 PCL Symbio Edition，但可能会遇到很多额外问题。
+**注**：仅对最新版本的启动器提供支持。取决于部分问题的特殊性（如系统不完整），有时你仍然必须升级操作系统以继续获得支持。你仍然可以尝试在不受支持的系统上使用 PCL XE，但可能会遇到很多额外问题。
 
 ## 下载与使用
 
-1. 从 [Releases](https://github.com/Hydrogen-Peroxide/PCL-Symbio-Edition/releases) 下载最新版本的发布包
+1. 从 [Releases](https://github.com/8888888b/PCL-X-Edition/releases) 下载最新版本的发布包
 2. 解压到任意目录（启动器为绿色便携版，不会写入系统目录）
-3. 运行 `Plain Craft Launcher 2.exe`，选择 Java 版、基岩版，或进入「网易版」「问问 AI」；模组管理在 实例 → 版本设置 → 模组管理
+3. 运行 `Plain Craft Launcher XE.exe`，选择 Java 版、基岩版，或进入「网易版」「问问 AI」；模组管理在 实例 → 版本设置 → 模组管理
 
-> PCL XE 使用独立版本号 `2.14.00`，已停用自动更新检查，避免被上游 PCL Symbio Edition 的 Release 覆盖。请从本分支的发布页手动获取更新。
+> PCL XE 使用独立版本号，更新源指向本仓库的 Release，不会被上游 PCL Symbio Edition 的版本覆盖；也可以在「设置 → 关于与更新」里换成自建清单。
 
 官方发布包为框架依赖版本，需要预先安装 [.NET 10 Desktop Runtime](https://get.dot.net/10)；若使用自包含方式自行构建，则无需额外安装运行时。
 
@@ -204,28 +178,30 @@ dotnet publish "Plain Craft Launcher 2/Plain Craft Launcher 2.csproj" `
 
 ## 与上游的差异
 
-- 新增基岩版管理：版本检测、安装包导入、Xbox 账号登录与本地筛选
+- 新增「网易版」分页：直接定位并启动「我的世界中国版」的版本，不再唤起官方启动器
+- 新增「问问 AI」分页：接入任意 OpenAI 兼容接口，用对话让启动器执行白名单内的操作
+- 模组管理回到「版本设置 → 模组管理」，不再占用独立分页
+- 自动更新使用本分支自己的更新源，版本号独立（当前 `2.14.04`）
 - 移除联机大厅及配套模块，不再提供大厅与联机相关入口
-- 使用独立版本号（`2.17.13`），上游基线为 PCL `2.12.1`
 
 ## 声明
 
 > 以下声明同时会在启动器更新后的「版本说明」弹窗中展示。
 
-- **项目性质**：PCL Symbio Edition 是从 PCL Community Edition（PCL CE）分支衍生而来的独立版本，由个人开发者面向 Minecraft 国际版维护，与 LTCatt（龙腾猫跃）维护的 PCL2 官方项目、PCL-Community 维护的 PCL CE 官方项目均无隶属关系。
-- **支持范围**：PCL Symbio Edition 不支持 Minecraft 游戏开发商 Mojang Studios 在中国大陆的代理公司运营的「我的世界中国版」，也不提供与该版本相关的任何功能或适配。
-- **API 使用**：PCL Symbio Edition 仅通过经 Mojang Studios 批准的 API 访问 Minecraft 国际版的相关服务。
+- **项目性质**：PCL XE（Plain Craft Launcher XE）是基于 PCL Symbio Edition 的第三方实验分支，由个人开发者维护，与 LTCatt（龙腾猫跃）维护的 PCL2 官方项目、PCL-Community 维护的 PCL CE 官方项目均无隶属关系。
+- **支持范围**：PCL XE 的「网易版」分页只使用本机已安装的中国版客户端目录，不提供破解或私有数据访问；Java 版与基岩版能力沿用上游。
+- **API 使用**：PCL XE 仅通过经 Mojang Studios 批准的 API 访问 Minecraft 国际版的相关服务。
 - **代码来源**：本项目不包含任何 Minecraft（含「我的世界中国版」）的代码，也不包含 Mojang Studios 及其中国代理商的任何代码。
 - **名称使用**：文档与演示中出现的「Minecraft」字样仅用于描述本项目所支持的游戏，属于《中华人民共和国著作权法》规定的合理使用；相关截图与视频的版权归其各自开发者所有。
-- **关系说明**：PCL Symbio Edition 与 PCL2、PCL CE、Mojang Studios 及其中国代理商之间不存在任何隶属、合作、维护或授权关系。
+- **关系说明**：PCL XE 与 PCL2、PCL CE、PCL Symbio Edition、Mojang Studios 及其中国代理商之间不存在任何隶属、合作、维护或授权关系。
 - **正版倡导**：我们鼓励通过官方渠道购买并游玩正版 Minecraft。
-- **联机大厅**：PCL Symbio Edition 当前不提供 PCL CE 的联机大厅，相关模块已移除，目前没有已确认的恢复排期。
+- **联机大厅**：PCL XE 不提供 PCL CE 的联机大厅，相关模块已移除，目前没有已确认的恢复排期。
 
 ## 许可证
 
-- `Plain Craft Launcher 2/` 使用 [自定义许可证](https://github.com/Hydrogen-Peroxide/PCL-Symbio-Edition/blob/dev/Plain%20Craft%20Launcher%202/LICENCE)
-- 其余所有目录使用 [Apache License 2.0](https://github.com/Hydrogen-Peroxide/PCL-Symbio-Edition/blob/dev/LICENSE)
-- 本项目中，**基岩版适配模块、新增独立代码、配套脚本**：采用 GNU GPLv3，见 [LICENSE-GPL-3.0](./LICENSE-GPL-3.0)
+- `Plain Craft Launcher 2/` 使用 [自定义许可证](https://github.com/8888888b/PCL-X-Edition/blob/main/Plain%20Craft%20Launcher%202/LICENCE)
+- 其余所有目录使用 [Apache License 2.0](https://github.com/8888888b/PCL-X-Edition/blob/main/LICENSE)
+- 本项目中，**网易版适配、问问 AI、自动更新等新增独立代码**：采用 GNU GPLv3，见 [LICENSE-GPL-3.0](./LICENSE-GPL-3.0)
 
 > 重要：仅本项目作者独立新增的代码受 GPLv3 约束；上游原有代码许可不变。
 > 若你修改/分发本项目内 GPLv3 部分对应的衍生程序，衍生作品需要继续使用 GPLv3 开源。
@@ -234,12 +210,11 @@ dotnet publish "Plain Craft Launcher 2/Plain Craft Launcher 2.csproj" `
 ## 致谢
 
 - [PCL](https://github.com/Meloong-Git/PCL) — 原作者 龙腾猫跃
-- PCL CE — 社区维护分支，本项目的直接上游
+- [PCL Symbio Edition](https://github.com/Hydrogen-Peroxide/PCL-Symbio-Edition) — 本项目的直接上游，基岩版能力由此而来
 - [BedrockBoot](https://github.com/Round-Studio/BedrockBoot) 与 [BedrockLauncher.Core](https://github.com/Round-Studio/BedrockLauncher.Core) — Round Studio 开发的基岩版项目（GPL-3.0），本项目基岩版安装、解密与启动方案的移植参考，来源与适用范围见 [NOTICE](NOTICE)
 - [BLoader](https://github.com/Chlna6666/BLoader) — Chlna6666 开发的基岩版 Mod 加载器（GPL-3.0），随启动器分发并注入，许可证见 [THIRD-PARTY/BLoader/LICENSE](<Plain Craft Launcher 2/THIRD-PARTY/BLoader/LICENSE>)
 - [LeviLamina](https://github.com/LiteLDev/LeviLamina) 与 [lip](https://github.com/LiteLDev/lip) — 按游戏版本通过官方 lip 安装的 LeviLamina 客户端（LGPL-3.0 / GPL-3.0），不随本项目分发
 - 以及 Dapper、Downloader、Markdig.Wpf、NAudio、Microsoft.Data.Sqlite、protobuf-net、Lucide 等开源项目，完整的第三方组件与许可信息见 [metadata.json](Plain%20Craft%20Launcher%202/metadata.json) 与启动器「关于」页面
 
 
-**此页浏览量**（总计 / 今日）：[![Hits](https://hits.zkitefly.eu.org/?tag=https://github.com/Hydrogen-Peroxide/PCL-Symbio-Edition)](https://hits.zkitefly.eu.org/?tag=https://github.com/Hydrogen-Peroxide/PCL-Symbio-Edition&web=true)
-
+**此页浏览量**（总计 / 今日）：[![Hits](https://hits.zkitefly.eu.org/?tag=https://github.com/8888888b/PCL-X-Edition)](https://hits.zkitefly.eu.org/?tag=https://github.com/8888888b/PCL-X-Edition&web=true)

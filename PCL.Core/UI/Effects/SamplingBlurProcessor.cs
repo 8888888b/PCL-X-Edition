@@ -22,6 +22,11 @@ internal sealed class SamplingBlurProcessor : IDisposable
     private static readonly ArrayPool<uint> _UintPool = ArrayPool<uint>.Create();
     private static readonly ArrayPool<float> _FloatPool = ArrayPool<float>.Create();
     private static readonly ConcurrentDictionary<string, CachedBlurResult> _Cache = new();
+
+    // 模糊结果是整张位图，一张 1920x1080 就要 8 MB；条目数按字节数卡，避免窗口越大越吃内存
+    private const int MaxCacheEntries = 8;
+    private const long MaxCacheBytes = 48L * 1024 * 1024;
+    private static long _cacheBytes;
     
     private readonly object _lockObject = new();
     private bool _disposed;
@@ -31,6 +36,7 @@ internal sealed class SamplingBlurProcessor : IDisposable
         public WriteableBitmap Bitmap;
         public DateTime LastUsed;
         public string Key;
+        public long Bytes;
     }
 
     /// <summary>
@@ -47,7 +53,7 @@ internal sealed class SamplingBlurProcessor : IDisposable
     {
         lock (_lockObject)
         {
-            _Cache.Clear();
+            _TrimCache();
         }
     }
 
@@ -76,15 +82,19 @@ internal sealed class SamplingBlurProcessor : IDisposable
 
         lock (_lockObject)
         {
+            var bytes = (long)result.PixelWidth * result.PixelHeight * 4;
+            if (_Cache.TryRemove(cacheKey, out var old)) _cacheBytes -= old.Bytes;
+            _cacheBytes += bytes;
             _Cache[cacheKey] = new CachedBlurResult
             {
                 Bitmap = result,
                 LastUsed = DateTime.UtcNow,
-                Key = cacheKey
+                Key = cacheKey,
+                Bytes = bytes
             };
 
-            // 清理过期缓存
-            if (_Cache.Count > 50)
+            // 清理过期 / 超额缓存
+            if (_Cache.Count > MaxCacheEntries || _cacheBytes > MaxCacheBytes)
             {
                 _CleanExpiredCache();
             }
@@ -570,14 +580,30 @@ internal sealed class SamplingBlurProcessor : IDisposable
             select kvp.Key
         ).ToList();
 
-        foreach (var key in keysToRemove) _Cache.TryRemove(key, out _);
+        foreach (var key in keysToRemove)
+            if (_Cache.TryRemove(key, out var removed))
+                _cacheBytes -= removed.Bytes;
+
+        // 过期项清完仍然超额时，按最近最少使用继续淘汰，直到回到限制以内
+        while ((_Cache.Count > MaxCacheEntries || _cacheBytes > MaxCacheBytes) && !_Cache.IsEmpty)
+        {
+            var oldest = _Cache.OrderBy(kvp => kvp.Value.LastUsed).First();
+            if (_Cache.TryRemove(oldest.Key, out var removed)) _cacheBytes -= removed.Bytes;
+        }
+    }
+
+    /// <summary>丢弃全部模糊结果（缓存是整张位图，回收内存时要一起清掉）。</summary>
+    private static void _TrimCache()
+    {
+        _Cache.Clear();
+        _cacheBytes = 0;
     }
 
     public void Dispose()
     {
         if (!_disposed)
         {
-            _Cache.Clear();
+            _TrimCache();
             _disposed = true;
         }
         GC.SuppressFinalize(this);

@@ -22,12 +22,17 @@
         <Configurations>Beta;Debug;Release;CI</Configurations>
         <Platforms>AnyCPU;x64;ARM64</Platforms>
         <ImplicitUsings>enable</ImplicitUsings>
+        <!-- 桌面 UI：工作站 GC + 保留内存关闭，空闲物理页才能真正还给系统 -->
+        <ServerGarbageCollection>false</ServerGarbageCollection>
+        <ConcurrentGarbageCollection>true</ConcurrentGarbageCollection>
+        <RetainVMGarbageCollection>false</RetainVMGarbageCollection>
         <ApplicationManifest>app.manifest</ApplicationManifest>
         <ApplicationIcon>Images\icon.ico</ApplicationIcon>
-        <AssemblyTitle>Plain Craft Launcher Symbio Edition</AssemblyTitle>
-        <Description>Minecraft 启动器 (作者: 龙腾猫跃; Symbio Edition)</Description>
-        <Product>Plain Craft Launcher Symbio Edition</Product>
-        <Copyright>Copyright © 龙腾猫跃 2016. All Rights Reserved.</Copyright>
+        <AssemblyTitle>Plain Craft Launcher XE</AssemblyTitle>
+        <Description>Minecraft 启动器 (作者: 龙腾猫跃; PCL XE)</Description>
+        <Product>Plain Craft Launcher XE</Product>
+        <Company>PCL XE</Company>
+        <Copyright>Copyright © 龙腾猫跃 2016, PCL XE 项目 2026. All Rights Reserved.</Copyright>
         <AssemblyVersion>2.17.13</AssemblyVersion>
         <FileVersion>2.17.13</FileVersion>
         <NoWarn>
@@ -83,6 +88,12 @@
     <ItemGroup>
         <Using Include="System.Text.Json" />
         <Using Include="System.Text.Json.Nodes" />
+    </ItemGroup>
+    <ItemGroup>
+        <!-- GC 在内存压力下更积极回收，降低长期驻留（0-9，越大越省内存、CPU 略增） -->
+        <RuntimeHostConfigurationOption Include="System.GC.ConserveMemory" Value="5" />
+        <RuntimeHostConfigurationOption Include="System.GC.RetainVM" Value="false" />
+        <RuntimeHostConfigurationOption Include="System.GC.Server" Value="false" />
     </ItemGroup>
     <ItemGroup>
         <Import Include="System.IO" />

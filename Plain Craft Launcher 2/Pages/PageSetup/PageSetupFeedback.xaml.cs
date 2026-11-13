@@ -63,7 +63,7 @@ public partial class PageSetupFeedback
         try
         {
             list = Requester.FetchJson(
-                "https://api.github.com/repos/Hydrogen-Peroxide/PCL-Symbio-Edition/issues?state=all&sort=created&per_page=200",
+                "https://api.github.com/repos/8888888b/PCL-X-Edition/issues?state=all&sort=created&per_page=200",
                 new RequestParam
                 {
                     Retries = 3,

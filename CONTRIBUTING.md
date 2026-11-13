@@ -1,8 +1,8 @@
 # 如何为项目做贡献
 
 Wiki 页面:
-[开发指南](https://github.com/Hydrogen-Peroxide/PCL-Symbio-Edition/wiki/开发指南)
-[技术规范](https://github.com/Hydrogen-Peroxide/PCL-Symbio-Edition/wiki/技术规范)
+[开发指南](https://github.com/8888888b/PCL-X-Edition/wiki/开发指南)
+[技术规范](https://github.com/8888888b/PCL-X-Edition/wiki/技术规范)
 
 ## 本地构建与测试
 
@@ -41,7 +41,7 @@ MirrorChyan 同步默认关闭。仅在仓库维护者已确认自己的镜像�
 
 ## 开始之前
 
-查看 [Issues](https://github.com/Hydrogen-Peroxide/PCL-Symbio-Edition/issues) 寻找可以参与的任务，或创建新 Issue 讨论您的想法。
+查看 [Issues](https://github.com/8888888b/PCL-X-Edition/issues) 寻找可以参与的任务，或创建新 Issue 讨论您的想法。
 
 ## 贡献流程
 

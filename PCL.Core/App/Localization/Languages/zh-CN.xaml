@@ -2832,7 +2832,7 @@
     <!-- Setup.About.Legal -->
 
     <sys:String x:Key="Setup.About.Legal.CommunitySource">PCL XE 开源代码</sys:String>
-    <sys:String x:Key="Setup.About.Legal.CopyrightText">Copyright © 2026 PCL Symbio Edition &amp; 龙腾猫跃.&#xD;非 MINECRAFT 官方产品。未经 MOJANG 或 MICROSOFT 批准，也不与 MOJANG 或 MICROSOFT 关联。</sys:String>
+    <sys:String x:Key="Setup.About.Legal.CopyrightText">Copyright © 2026 Plain Craft Launcher XE &amp; 龙腾猫跃.&#xD;非 MINECRAFT 官方产品。未经 MOJANG 或 MICROSOFT 批准，也不与 MOJANG 或 MICROSOFT 关联。</sys:String>
     <sys:String x:Key="Setup.About.Legal.OtherInfo">其他信息</sys:String>
     <sys:String x:Key="Setup.About.Legal.PrivacyNotice">隐私说明</sys:String>
     <sys:String x:Key="Setup.About.Legal.PrivacyText">本软件的 User Agent 中包含启动器的版本号，以统计各版本的用户数量。&#xD;除此之外，本软件不会向开发者上传任何其他信息。&#xD;* 软硬件调查相关功能遵循其自身的隐私政策，与上述说明不通用。</sys:String>
@@ -2844,7 +2844,7 @@
     <sys:String x:Key="Setup.About.SpecialThanks.Info.BedrockBoot">提供了基岩版旧版本启动方案与实现参考</sys:String>
     <sys:String x:Key="Setup.About.SpecialThanks.Info.Bmclapi">提供 BMCLAPI 镜像源和 Forge 安装工具，详见 https://bmclapi.bangbang93.com</sys:String>
     <sys:String x:Key="Setup.About.SpecialThanks.Info.Cloud">提供了 PCL CE 的相关云服务</sys:String>
-    <sys:String x:Key="Setup.About.SpecialThanks.Info.Hydrogen">PCL Symbio Edition 的维护者</sys:String>
+    <sys:String x:Key="Setup.About.SpecialThanks.Info.Hydrogen">PCL XE 所基于的 PCL Symbio Edition 的维护者</sys:String>
     <sys:String x:Key="Setup.About.SpecialThanks.Info.Mcim">提供了 MCIM 中国模组下载镜像源和帮助库图床！</sys:String>
     <sys:String x:Key="Setup.About.SpecialThanks.Info.Mcmod">提供了模组名称的中文翻译和更多相关信息！</sys:String>
     <sys:String x:Key="Setup.About.SpecialThanks.Name.BedrockBoot">BedrockBoot @ Round Studio</sys:String>
@@ -3732,7 +3732,7 @@
     <sys:String x:Key="Tools.Test.Skin.TooFrequent">获取皮肤太过频繁，请 5 分钟之后再试！</sys:String>
     <sys:String x:Key="Tools.Test.Unlock.Description">MCBEUnlock++ 是社区独立开发的基岩版解锁工具，可将解锁后的 DLL 放入版本目录下的 preload 文件夹，启动时由 PCL XE 自动注入。&#xA;本启动器仅提供官网入口，不内置也不托管该工具。</sys:String>
     <sys:String x:Key="Tools.Test.Unlock.Download">前往官网下载</sys:String>
-    <sys:String x:Key="Tools.Test.Unlock.Notice">PCL Symbio Edition 鼓励所有玩家通过正规渠道购买并支持正版游戏。</sys:String>
+    <sys:String x:Key="Tools.Test.Unlock.Notice">Plain Craft Launcher XE 鼓励所有玩家通过正规渠道购买并支持正版游戏。</sys:String>
     <sys:String x:Key="Tools.Test.Unlock.Title">MCBEUnlock++</sys:String>
 
     <!-- Update -->
@@ -3740,7 +3740,7 @@
     <sys:String x:Key="Update.Action">更新</sys:String>
     <sys:String x:Key="Update.Available">启动器有新版本可用（{0} -&gt; {1}）&#xA;是否立即更新？</sys:String>
     <sys:String x:Key="Update.Check.Failed">无法获取最新版本信息，请检查网络连接</sys:String>
-    <sys:String x:Key="Update.CommunityNotice.Body">你正在使用 PCL XE（PCL Symbio Edition），遇到问题请不要向原版 PCL 仓库反馈！&#xA;PCL XE 由 Hydrogen-Peroxide 独立开发维护，与龙腾猫跃无从属关系，且不会为您的使用做担保。&#xA;&#xA;如果你是意外下载的 PCL XE，建议下载原版 PCL 使用。&#xA;&#xA;该版本与原版的特性区别：&#xA;- 主题切换：仅部分固定蓝色系主题，没有计划新增其它主题。&#xA;- 百宝箱：缺失部分原版中的内容（回声洞、千万别点）。&#xA;&#xA;此提示会在启动器更新后展示一次。</sys:String>
+    <sys:String x:Key="Update.CommunityNotice.Body">你正在使用 PCL XE（Plain Craft Launcher XE），遇到问题请不要向原版 PCL 仓库反馈！&#xA;PCL XE 是基于 PCL Symbio Edition 的第三方分支，由 PCL XE 项目独立开发维护，与龙腾猫跃、PCL CE 官方项目均无隶属关系，且不会为您的使用做担保。&#xA;&#xA;该版本与原版的特性区别：&#xA;- 网易版：直接定位并启动「我的世界中国版」的版本，不再唤起官方启动器。&#xA;- 问问 AI：接入任意 OpenAI 兼容接口，用对话让启动器执行操作。&#xA;- 自动更新：使用本分支自己的更新源，不会被上游版本覆盖。&#xA;&#xA;此提示会在启动器更新后展示一次。</sys:String>
     <sys:String x:Key="Update.CommunityNotice.Confirm">我知道了</sys:String>
     <sys:String x:Key="Update.CommunityNotice.Title">PCL XE 版本说明</sys:String>
     <sys:String x:Key="Update.Error.FetchFailed">获取启动器更新失败，请检查网络连接</sys:String>

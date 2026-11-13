@@ -337,7 +337,7 @@ public partial class PageSetupUpdate
 
     private void BtnChangelog_Click(object sender, MouseButtonEventArgs e)
     {
-        ModBase.OpenWebsite("https://github.com/Hydrogen-Peroxide/PCL-Symbio-Edition/releases");
+        ModBase.OpenWebsite("https://github.com/8888888b/PCL-X-Edition/releases");
     }
 
     public string VersionNameFormat(string str)
