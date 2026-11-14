@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -6,6 +7,25 @@ namespace PCL;
 
 public class MyPageLeft : Grid
 {
+    /// <summary>
+    ///     控件在 XAML 中声明的常态不透明度。
+    ///     逐个进入动画会先把不透明度压到 0，结束时再恢复；如果一律恢复成固定值，
+    ///     卡片标题、页面大标题这类本该完全不透明的文本就会被压成半透明（看起来发灰）。
+    /// </summary>
+    private static readonly ConditionalWeakTable<FrameworkElement, StrongBox<double>> BaseOpacity = new();
+
+    private static double GetBaseOpacity(FrameworkElement element)
+    {
+        if (BaseOpacity.TryGetValue(element, out var cached))
+            return cached.Value;
+        // 首次遇到时读到的就是 XAML 里声明的值（例如分组小标题的 0.6）
+        var value = element.Opacity;
+        if (value <= 0.05d)
+            value = 1d; // 声明为 0 的控件一般靠别的动画显示出来，不参与逐个进入
+        BaseOpacity.Add(element, new StrongBox<double>(value));
+        return value;
+    }
+
     public static DependencyProperty AnimatedControlProperty =
         DependencyProperty.Register("AnimatedControl", typeof(FrameworkElement), typeof(MyPageLeft));
 
@@ -69,11 +89,12 @@ public class MyPageLeft : Grid
                 }
                 else
                 {
+                    var targetOpacity = GetBaseOpacity(element);
                     element.Opacity = 0d;
                     element.RenderTransform = new TranslateTransform(-25, 0d);
                     if (element is MyListItem)
                         ((MyListItem)element).isMouseOverAnimationEnabled = false;
-                    aniList.Add(ModAnimation.AaOpacity(element, element is TextBlock ? 0.6d : 1d, 100, delay,
+                    aniList.Add(ModAnimation.AaOpacity(element, targetOpacity, 100, delay,
                         new ModAnimation.AniEaseOutFluent(ModAnimation.AniEasePower.Weak)));
                     aniList.Add(ModAnimation.AaTranslateX(element, 5d, 200, delay,
                         new ModAnimation.AniEaseOutFluent()));
